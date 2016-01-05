@@ -1,0 +1,30 @@
+{
+  "name": "nuad/graph-objects",
+  "description": "An array to object map php library. Useful when mapping from incoming json or database results",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alkis Stamos",
+      "email": "stamosalkis@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.3.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Nuad\\Graph\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Nuad\\Graph\\Test\\": "tests",
+      "Nuad\\Graph\\Example\\": "example"
+    }
+  }
+}
