@@ -8,6 +8,12 @@ The library has no extra requirements (except phpunit for testing).  It does not
 
 ----------
 
+Installation
+-------------
+Installing ```nuad/graph-objects``` with composer:
+```
+$ composer require nuad/graph-objects
+```
 
 Usage
 -------------
@@ -98,7 +104,7 @@ The Entity contains a list of properties (defined with the properties() method) 
 
 #### Types
 The types of the properties are divided in three main categories
-> - **flat types **(Integer,Double,Boolean,FlatArray)
+> - **flat types** (Integer,Double,Boolean,FlatArray)
 > - **objects** (which refers to another graph object. The constructor requires a clean instance of that object)
 > - **collection** (which refers to an array of graph objects. The constructor also requires a clean instance of that object)
 
@@ -248,4 +254,3 @@ class User extends Person
 
 
 ----------
-
