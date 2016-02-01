@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/4/16
- * Time: 10:41 PM
- */
 
 namespace Nuad\Graph\Test;
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/5/16
- * Time: 1:29 PM
- */
 return array(
     'aString' => 'adiffvalue',
     'anInteger' => 12,

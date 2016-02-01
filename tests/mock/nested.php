@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/5/16
- * Time: 1:47 PM
- */
 return array(
     'ownProperty' => 'thisisastringnested',
     'child' => array(

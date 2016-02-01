@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/4/16
- * Time: 7:31 PM
- */
 
 namespace Nuad\Graph\Test;
 
 
-class GraphAdapterTest extends \PHPUnit_Framework_TestCase
+class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 {
     public function testMapObjectBase()
     {
@@ -18,7 +12,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
     }
@@ -30,7 +24,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
     }
@@ -42,7 +36,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
     }
@@ -54,7 +48,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
@@ -68,7 +62,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
@@ -82,7 +76,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
@@ -98,7 +92,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->childValueStr);
         $this->assertSame(false,$obj->childValueBool);
@@ -113,7 +107,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->child->aString);
         $this->assertSame(12, $obj->child->anInteger);
         $this->assertSame(true, $obj->child->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->child->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->child->flatArray));
         $this->assertSame(10.5, $obj->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->child->childValueStr);
         $this->assertSame(false,$obj->child->childValueBool);
@@ -131,7 +125,7 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue', $obj->nest->child->aString);
         $this->assertSame(12, $obj->nest->child->anInteger);
         $this->assertSame(true, $obj->nest->child->aBoolean);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->nest->child->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->nest->child->flatArray));
         $this->assertSame(10.5, $obj->nest->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->nest->child->childValueStr);
         $this->assertSame(false,$obj->nest->child->childValueBool);
@@ -148,24 +142,8 @@ class GraphAdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('astringvalue'.$index,$obj->aString);
         $this->assertSame($index,$obj->anInteger);
         $this->assertSame(($index+0.5),$obj->aDouble);
-        $this->assertTrue($this->arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(false, $obj->aBoolean);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
-    }
-
-    private function arrays_are_similar($expected, $actual)
-    {
-        if (count(array_diff_assoc($expected, $actual)))
-        {
-            return false;
-        }
-        foreach($expected as $k => $v)
-        {
-            if ($v !== $actual[$k])
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }
