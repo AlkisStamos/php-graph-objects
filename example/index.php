@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/5/16
- * Time: 5:59 PM
- */
 
 require '../vendor/autoload.php';
 

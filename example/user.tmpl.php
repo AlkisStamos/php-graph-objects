@@ -1,11 +1,5 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
- * User: smiley
- * Date: 1/5/16
- * Time: 6:07 PM
- */
-/**
  * @var \Nuad\Graph\Example\UserView $this
  */
 ?>
