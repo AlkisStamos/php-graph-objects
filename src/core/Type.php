@@ -72,6 +72,10 @@ class Type
      * @var TypeAdapter
      */
     public $adapter;
+    /**
+     * @var callable
+     */
+    private $mapCallback;
 
     /**
      * Private and final constructor. The type object can only be instantiated though its static methods in order to
@@ -87,6 +91,7 @@ class Type
         $this->importance = self::$_OPTIONAL;
         $this->expected = array();
         $this->default = null;
+        $this->mapCallback = null;
     }
 
     /**
@@ -265,16 +270,23 @@ class Type
      *
      * @param $name
      * @param array $payload
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return bool | null
      */
-    public function match($name, Array $payload)
+    public function match($name, Array $payload, $scenario)
     {
         $matched = false;
         foreach($payload as $key=>$val)
         {
             if($key == $name)
             {
-                $matched = $this->adapter->map($val,$this);
+                $callback = null;
+                if($this->mapCallback !== null)
+                {
+                    $callback = self::runMapCallback($this->mapCallback,$val,$name,$scenario);
+                }
+                $matched = $callback === null ? $this->adapter->map($val,$this) : new Value(true,$callback);
+                break;
             }
         }
         if($matched === false)
@@ -284,11 +296,40 @@ class Type
                 if(!$checked)
                 {
                     $this->expected[$expected] = true;
-                    $matched = $this->match($expected,$payload);
+                    $matched = $this->match($expected,$payload,$scenario);
                     break;
                 }
             }
         }
         return $matched;
+    }
+
+    /**
+     * Attaches a callback to the property. The callback will be called when the match property has found a valid name
+     * in the payload to map the property with. The callback has three parameters. The data found in the payload, the
+     * name of the index the data was found in and the scenario. The scenario is passed to assist with different types
+     * of mapping
+     *
+     * @param callable $callable
+     * @return $this
+     */
+    public function handler(callable $callable)
+    {
+        $this->mapCallback = $callable;
+        return $this;
+    }
+
+    /**
+     * Helper method to run a callback that is a property (on $this)
+     *
+     * @param callable $callback
+     * @param mixed $data
+     * @param string $name
+     * @param string $scenario
+     * @return mixed
+     */
+    private static function runMapCallback(callable $callback, $data, $name, $scenario)
+    {
+        return $callback($data,$name,$scenario);
     }
 } 

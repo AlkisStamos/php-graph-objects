@@ -37,10 +37,11 @@ trait GraphAdapter
      * try to invoke the entity's constructor with the data.
      *
      * @param array $data The data to be injected in the graph object
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped object
      * @throws GraphTypeException
      */
-    public static function inject(Array $data)
+    public static function inject(Array $data, $scenario=null)
     {
         $obj = self::create(true);
         $reflect = null;
@@ -59,7 +60,7 @@ trait GraphAdapter
             $properties = array();
             foreach($graph->properties as $name=>$property)
             {
-                $properties[$name] = self::mapInternalProperty($data,$name,$property);
+                $properties[$name] = self::mapInternalProperty($data,$name,$property,$scenario);
             }
             if(null !== ($constructor = $reflect->getConstructor()))
             {
@@ -87,19 +88,23 @@ trait GraphAdapter
      * reflection of that entity and the data to map. The purpose of this method is to not let the trait decide when
      * to create new entities by reflection.
      *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
      * @param Graphable $obj The empty instance of the graph object
      * @param \ReflectionClass $reflect A reflection of the graph object
      * @param array $data The data to be mapped to the graph object
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped object
      * @throws GraphTypeException
      */
-    public static function injectWithInstance(Graphable $obj, \ReflectionClass $reflect, Array $data)
+    public static function injectWithInstance(Graphable $obj, \ReflectionClass $reflect, Array $data, $scenario=null)
     {
         $graph = $obj->graph();
         $properties = array();
         foreach($graph->properties as $name=>$property)
         {
-            $properties[$name] = self::mapInternalProperty($data,$name,$property);
+            $properties[$name] = self::mapInternalProperty($data,$name,$property,$scenario);
         }
         if(null !== ($constructor = $reflect->getConstructor()))
         {
@@ -125,11 +130,15 @@ trait GraphAdapter
      * The simplest way to map a graph object. The method will just call the create method of the entity and will try
      * to map the data provided based on the graph metadata
      *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
      * @param array $data The data to be mapped
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped graph object
      * @throws GraphTypeException
      */
-    public static function map(Array $data)
+    public static function map(Array $data, $scenario=null)
     {
         $obj = self::create();
         if($obj instanceof Graphable)
@@ -137,7 +146,7 @@ trait GraphAdapter
             $graph = $obj->graph();
             foreach($graph->properties as $name=>$property)
             {
-                $obj->{$name} = self::mapInternalProperty($data,$name,$property);
+                $obj->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
             }
         }
         return $obj;
@@ -148,10 +157,14 @@ trait GraphAdapter
      * entity and will ignore properties that already have values. For example when creating a DTO from one database but
      * need to pass values from another database system without creating a new instance.
      *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
      * @param array $data The data to be mapped to the empty values of the object
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped graph object
      */
-    public function mapEmpty(Array $data)
+    public function mapEmpty(Array $data, $scenario=null)
     {
         if($this instanceof Graphable)
         {
@@ -160,9 +173,9 @@ trait GraphAdapter
             {
                 try
                 {
-                    if(!isset($this->{$name}))
+                    if($this->{$name} === null)
                     {
-                        $this->{$name} = self::mapInternalProperty($data,$name,$property);
+                        $this->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
                         continue;
                     }
                 }
@@ -180,12 +193,16 @@ trait GraphAdapter
      * object. NOTICE: the method will fail on flat type data (int, string, bool etc) those properties should be mapped
      * the traditional way as $this->property=value
      *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
      * @param array $data The data to map to the property
      * @param string $propertyName The property name of the object
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped graph object
      * @throws GraphTypeException
      */
-    public function mapProperty(Array $data,$propertyName)
+    public function mapProperty(Array $data,$propertyName,$scenario=null)
     {
         if($this instanceof Graphable)
         {
@@ -194,7 +211,7 @@ trait GraphAdapter
             {
                 throw new GraphTypeException('Property: '.$propertyName.' was not found on graph');
             }
-            $this->{$propertyName} = self::mapInternalProperty(array($propertyName => $data),$propertyName,$entity->properties[$propertyName]);
+            $this->{$propertyName} = self::mapInternalProperty(array($propertyName => $data),$propertyName,$entity->properties[$propertyName],$scenario);
         }
         return $this;
     }
@@ -203,15 +220,19 @@ trait GraphAdapter
      * Internal method used to map properties to its values the method will take each property and though the graph
      * metadata will try to map the passed data array to the entity's property
      *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
      * @param array $data The data to be mapped to the property
      * @param string $name The name of the property
      * @param Type $property The graph type of the property
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return null|mixed The method will allow null on optional properties
      * @throws GraphTypeException
      */
-    private static function mapInternalProperty(Array $data, $name, Type $property)
+    private static function mapInternalProperty(Array $data, $name, Type $property, $scenario=null)
     {
-        $val = $property->match($name,$data);
+        $val = $property->match($name,$data,$scenario);
         $injectable = null;
         if($val === null)
         {
