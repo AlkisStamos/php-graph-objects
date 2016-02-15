@@ -26,6 +26,10 @@ class CollectionAdapter implements TypeAdapter
      */
     public function map($from, Type $pattern)
     {
+        if(!is_array($from))
+        {
+            return null;
+        }
         if(!array_key_exists(0,$pattern->value))
         {
             throw new GraphTypeException('Graph collection did not define a type');

@@ -75,7 +75,7 @@ class Property //TODO: maybe refactor as trait to accept map?
      *
      * @param Type $type
      */
-    private final function __construct(Type $type)
+    protected final function __construct(Type $type)
     {
         $this->type = $type;
         $this->importance = self::$_OPTIONAL;

@@ -37,7 +37,7 @@ class Entity
      *
      * @param $names
      */
-    private final function __construct($names)
+    protected final function __construct($names)
     {
         $this->names = $names;
         $this->properties = array();

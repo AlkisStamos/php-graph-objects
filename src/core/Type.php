@@ -84,7 +84,7 @@ class Type
      * @param $value
      * @param TypeAdapter $adapter
      */
-    private final function __construct($value, TypeAdapter $adapter)
+    protected final function __construct($value, TypeAdapter $adapter)
     {
         $this->value = $value;
         $this->adapter = $adapter;
