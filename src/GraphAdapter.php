@@ -56,11 +56,15 @@ trait GraphAdapter
         }
         if($obj instanceof Graphable && $reflect instanceof \ReflectionClass)
         {
-            $graph = $obj->graph(); //TODO: inject with instance
+            $graph = $obj->graph();
             $properties = array();
             foreach($graph->properties as $name=>$property)
             {
-                $properties[$name] = self::mapInternalProperty($data,$name,$property,$scenario);
+                $valInject = self::mapInternalProperty($data,$name,$property,$scenario);
+                if($valInject !== null)
+                {
+                    $properties[$name] = $valInject;
+                }
             }
             if(null !== ($constructor = $reflect->getConstructor()))
             {
@@ -68,7 +72,17 @@ trait GraphAdapter
                 $inject = array();
                 foreach($params as $index=>$param)
                 {
-                    $inject[$index] = array_key_exists($param->name,$properties) ? $properties[$param->name] : null;
+                    if(array_key_exists($param->name,$properties))
+                    {
+                        $inject[$index] = $properties[$param->name];
+                        continue;
+                    }
+                    $val = null;
+                    if($param->isDefaultValueAvailable())
+                    {
+                        $val = $param->getDefaultValue();
+                    }
+                    $inject[$index] = $val;
                 }
                 $obj = $reflect->newInstanceArgs($inject);
             }
@@ -79,6 +93,7 @@ trait GraphAdapter
                     $obj->{$name} = $value;
                 }
             }
+            $graph->complete($obj, $scenario, $data);
         }
         return $obj;
     }
@@ -92,37 +107,23 @@ trait GraphAdapter
      * scenario value along with the data and the found name will be passed to the callback.
      *
      * @param Graphable $obj The empty instance of the graph object
-     * @param \ReflectionClass $reflect A reflection of the graph object
      * @param array $data The data to be mapped to the graph object
      * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped object
      * @throws GraphTypeException
      */
-    public static function injectWithInstance(Graphable $obj, \ReflectionClass $reflect, Array $data, $scenario=null)
+    public static function injectWithInstance(Graphable $obj, Array $data, $scenario=null)
     {
         $graph = $obj->graph();
-        $properties = array();
         foreach($graph->properties as $name=>$property)
         {
-            $properties[$name] = self::mapInternalProperty($data,$name,$property,$scenario);
-        }
-        if(null !== ($constructor = $reflect->getConstructor()))
-        {
-            $params = $constructor->getParameters();
-            $inject = array();
-            foreach($params as $index=>$param)
+            $valInject = self::mapInternalProperty($data,$name,$property,$scenario);
+            if($valInject !== null)
             {
-                $inject[$index] = array_key_exists($param->name,$properties) ? $properties[$param->name] : null;
-            }
-            $obj = $reflect->newInstanceArgs($inject);
-        }
-        else
-        {
-            foreach($properties as $name=>$value)
-            {
-                $obj->{$name} = $value;
+                $obj->{$name} = $valInject;
             }
         }
+        $graph->complete($obj, $scenario, $data);
         return $obj;
     }
 
@@ -148,6 +149,7 @@ trait GraphAdapter
             {
                 $obj->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
             }
+            $graph->complete($obj, $scenario, $data);
         }
         return $obj;
     }
@@ -184,6 +186,7 @@ trait GraphAdapter
                     continue;
                 }
             }
+            $graph->complete($this, $scenario, $data);
         }
         return $this;
     }

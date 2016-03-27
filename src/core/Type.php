@@ -62,7 +62,7 @@ class Type
      * A value that represents the type of the property. For example a property of type int will have the value of zero.
      * Its main cause is to provide a way to map entities or arrays of entities of a certain object type.
      *
-     * @var Entity | Array | Entity[] | GraphAdapter | GraphAdapter[]
+     * @var Entity | array | Entity[] | GraphAdapter | GraphAdapter[]
      */
     public $value;
     /**
@@ -73,9 +73,19 @@ class Type
      */
     public $adapter;
     /**
+     * The handler callback of the property. The handler callback will be called before applying the data to the
+     * property and its return value will be mapped instead.
+     *
      * @var callable
      */
     private $mapCallback;
+    /**
+     * Excepted property names in the payload. The difference is that the bindings names will override the property
+     * names and will be chosen first.
+     *
+     * @var array
+     */
+    private $bindings;
 
     /**
      * Private and final constructor. The type object can only be instantiated though its static methods in order to
@@ -90,6 +100,7 @@ class Type
         $this->adapter = $adapter;
         $this->importance = self::$_OPTIONAL;
         $this->expected = array();
+        $this->bindings = array();
         $this->default = null;
         $this->mapCallback = null;
     }
@@ -264,6 +275,19 @@ class Type
     }
 
     /**
+     * An array of strings define where the value should be found in the data payload. The system will first try to
+     * match indexes in the payload with the bindings names before applying the standard property name search.
+     *
+     * @param array $bindings
+     * @return $this
+     */
+    public function bindTo(array $bindings)
+    {
+        $this->bindings = $bindings;
+        return $this;
+    }
+
+    /**
      * Method to parse the incoming payload data array and will try to find a key matching the passed property name
      * (or the expected array). If found the method will apply the defined adapter to the data to map the data to the
      * property value.
@@ -271,38 +295,148 @@ class Type
      * @param $name
      * @param array $payload
      * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
-     * @return bool | null
+     * @return Value | null
      */
     public function match($name, Array $payload, $scenario)
     {
-        $matched = false;
-        foreach($payload as $key=>$val)
+        foreach($this->bindings as $binding)
         {
-            if($key == $name)
+            $matched = (strpos($binding,'.') !== false) ?
+                $this->matchNested(explode('.',$binding),$payload,$scenario,$found) :
+                $this->matchValue($binding,$payload,$scenario,$found);
+            if($found)
             {
-                $callback = null;
-                if($this->mapCallback !== null)
-                {
-                    $callback = self::runMapCallback($this->mapCallback,$val,$name,$scenario);
-                }
-                $matched = $callback === null ? $this->adapter->map($val,$this) : new Value(true,$callback);
-                break;
+                return $matched;
             }
         }
-        if($matched === false)
+        $matched = $this->matchValue($name,$payload,$scenario,$found);
+        if(!$found)
         {
             foreach($this->expected as $expected=>$checked)
             {
                 if(!$checked)
                 {
                     $this->expected[$expected] = true;
-                    $matched = $this->match($expected,$payload,$scenario);
-                    break;
+                    if(strpos($expected,'.') !== false)
+                    {
+                        $matched = $this->matchNested(explode('.',$expected),$payload,$scenario,$found);
+                        break;
+                    }
+                    else
+                    {
+                        $matched = $this->matchValue($expected,$payload,$scenario,$found);
+                        break;
+                    }
                 }
+            }
+            if(!$found && $this->default !== null)
+            {
+                $matched = new Value(true,$this->default);
             }
         }
         return $matched;
     }
+
+    /**
+     * Method that maps return the value to be applied to the current property. The name passed may be the property
+     * name or the expected/bindTo name of the property. If exists runs the handler callback of the property.
+     *
+     * @param $name
+     * @param $val
+     * @param $scenario
+     * @return mixed|Value
+     */
+    private function map($name, $val, $scenario)
+    {
+        $callback = null;
+        if($this->mapCallback !== null)
+        {
+            $callback = self::runMapCallback($this->mapCallback,$val,$name,$scenario);
+        }
+        return $callback === null ? $this->adapter->map($val,$this) : new Value(true,$callback);
+    }
+
+    /**
+     * Matches the value of the payload to the name provided. If found the method will set the matched reference to true
+     * in other case the method will return null and the matched set to false.
+     *
+     * @param $name
+     * @param $payload
+     * @param $scenario
+     * @param $matched
+     * @return mixed|Value|null
+     */
+    private function matchValue($name, $payload, $scenario, &$matched)
+    {
+        $matchedValue = null;
+        $matched = false;
+        $value = self::matchRawValue($name,$payload,$found);
+        if($found)
+        {
+            $matched = true;
+            $matchedValue = $this->map($name,$value,$scenario);
+        }
+        return $matchedValue;
+    }
+
+    /**
+     * Method that wraps the way a property name is found in the payload. If found the method will set the found
+     * reference to true.
+     *
+     * @param $name
+     * @param array $payload
+     * @param $found
+     * @return null
+     */
+    private static function matchRawValue($name, array $payload, &$found)
+    {
+        $found = false;
+        if(isset($payload[$name]))
+        {
+            $found = true;
+            return $payload[$name];
+        }
+        return null;
+    }
+
+    /**
+     * Method that matches a nested value (using the '.' character in the expected or bind to values). If the value is
+     * matched the method will set the matched reference to true.
+     *
+     * @param array $profile
+     * @param array $payload
+     * @param $scenario
+     * @param $matched
+     * @return mixed|Value|null
+     */
+    private function matchNested(array $profile, array $payload, $scenario, &$matched)
+    {
+        $matchedValue = null;
+        $matched = false;
+        $nested = $payload;
+        foreach($profile as $profileIndex=>$profileItem)
+        {
+            $value = self::matchRawValue($profileItem,$nested,$found);
+            if($found === false)
+            {
+                $matched = false;
+                return $matchedValue;
+            }
+            else if(!isset($profile[$profileIndex + 1]))
+            {
+                $matchedValue = $this->map($profileItem,$value,$scenario);
+                $matched = true;
+                return $matchedValue;
+            }
+            else
+            {
+                $nested = $value;
+            }
+        }
+        return $matchedValue;
+    }
+
+
 
     /**
      * Attaches a callback to the property. The callback will be called when the match property has found a valid name
@@ -332,4 +466,4 @@ class Type
     {
         return $callback($data,$name,$scenario);
     }
-} 
+}

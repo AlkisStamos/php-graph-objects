@@ -33,4 +33,30 @@ class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(true,$obj->childValueBool);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
     }
+
+    public function testFinalizeInject()
+    {
+        $data = require 'mock/base.php';
+        $obj = GraphObjectBase::inject($data,'test-finalize-inject');
+        $this->assertSame('thisisthefinalizedstring', $obj->aString);
+        $this->assertSame(7, $obj->anInteger);
+        $this->assertSame(false, $obj->aBoolean);
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertSame(7.0, $obj->aDouble);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+    }
+
+    public function testFinalizeMap()
+    {
+        $data = require 'mock/child.php';
+        $obj = GraphObjectChild::map($data,'test-finalize-map');
+        $this->assertSame('astringvalue', $obj->aString);
+        $this->assertSame(5, $obj->anInteger);
+        $this->assertSame(false, $obj->aBoolean);
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertSame(7.0, $obj->aDouble);
+        $this->assertSame('anotherstringvalue__append_finalize_value', $obj->childValueStr);
+        $this->assertSame(true,$obj->childValueBool);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+    }
 }

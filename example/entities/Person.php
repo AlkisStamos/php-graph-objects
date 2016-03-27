@@ -33,6 +33,9 @@ class Person implements Graphable
         return new self(0,'','');
     }
 
+    /**
+     * @return Entity
+     */
     public function graph()
     {
         return Entity::graph(

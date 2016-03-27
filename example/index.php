@@ -10,7 +10,7 @@ $users = array();
 
 foreach($userData as $data)
 {
-    $users[] = \Nuad\Graph\Example\User::map($data);
+    $users[] = \Nuad\Graph\Example\User::inject($data);
 }
 
 $view = new \Nuad\Graph\Example\UserView();

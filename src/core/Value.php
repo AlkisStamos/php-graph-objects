@@ -18,4 +18,9 @@ class Value
         $this->found = $found;
         $this->value = $value;
     }
+
+    public function __toString()
+    {
+        return $this->value;
+    }
 } 

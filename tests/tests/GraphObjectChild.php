@@ -42,6 +42,16 @@ class GraphObjectChild extends GraphObjectBase
                 'childValueBool' => Type::Boolean()
                 ->expected(array('child_val_bool'))
             ]
-        );
+        )
+        ->finalize(function($instance,$scenario)
+        {
+            if($scenario === 'test-finalize-map')
+            {
+                //when using map we are dealing with the same instance of the object and can use $this directly
+                $this->childValueStr = $this->childValueStr.'__append_finalize_value';
+                //but is safer to change the $instance values instead
+                $instance->aDouble = ($instance->aDouble + 1.5);
+            }
+        });
     }
 }

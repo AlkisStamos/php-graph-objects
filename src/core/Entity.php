@@ -30,6 +30,12 @@ class Entity
      * @var Type[]
      */
     public $properties;
+    /**
+     * Entity callback method to be called when the all the entity properties are mapped.
+     *
+     * @var callable
+     */
+    public $finalizeCallback;
 
     /**
      * Constructor of the entity graph. Defined private so that the class can only be instantiated through the
@@ -80,11 +86,54 @@ class Entity
      * normal properties method of the Entity object.
      *
      * @param string[] $names
-     * @return $this
+     * @return Entity
      */
     public function extend(Array $names)
     {
         $this->names = $names;
         return $this;
+    }
+
+    /**
+     * Applies the finalize callback to the entity. The finalize callback will be called when the graph object has been
+     * mapped completely in either inject or map methods
+     *
+     * @param callable $callback
+     * @return $this
+     */
+    public function finalize(callable $callback)
+    {
+        $this->finalizeCallback = $callback;
+        return $this;
+    }
+
+    /**
+     * Runs the finalize callback for the entity. The method will apply the mapped instance of the object the scenario
+     * and the raw data to the callback.
+     *
+     * @param $instance
+     * @param $scenario
+     * @param $data
+     */
+    public function complete($instance, $scenario, $data)
+    {
+        if($this->finalizeCallback !== null)
+        {
+            self::runFinalizeCallback($this->finalizeCallback,$instance,$scenario,$data);
+        }
+    }
+
+    /**
+     * Helper method to run the finalize callback.
+     *
+     * @param callable $callback
+     * @param $instance
+     * @param $scenario
+     * @param $data
+     * @return mixed
+     */
+    private static function runFinalizeCallback(callable $callback, $instance, $scenario, $data)
+    {
+        return $callback($instance, $scenario, $data);
     }
 } 

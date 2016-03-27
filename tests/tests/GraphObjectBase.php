@@ -49,7 +49,16 @@ class GraphObjectBase implements Graphable
                 'aBoolean'      => Type::Boolean(),
                 'flatArray'     => Type::FlatArray(),
                 'aDouble'       => Type::Double()
+                ->defaultVal(20.0)
             ]
-        );
+        )
+        ->finalize(function(GraphObjectBase $instance, $scenario)
+        {
+            if($scenario === 'test-finalize-inject')
+            {
+                $instance->aString = 'thisisthefinalizedstring';
+                $instance->aDouble = ($instance->aDouble + 1.5);
+            }
+        });
     }
 }

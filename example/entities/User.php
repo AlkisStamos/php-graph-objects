@@ -53,6 +53,10 @@ class User extends Person
                 'location'  => Type::Object(Location::create()),
                 'friends'   => Type::Collection(Person::create())
             ]
-        );
+        )
+        ->finalize(function(User $instance, $scenario, $data)
+        {
+            $instance->email .= '__appended_finalized_value';
+        });
     }
 }

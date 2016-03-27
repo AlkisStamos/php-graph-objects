@@ -137,6 +137,21 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testDefaultValue()
+    {
+        $data = require 'mock/child.php';
+        unset($data['aDouble']);
+        $obj = GraphObjectChild::inject($data);
+        $this->assertSame('astringvalue', $obj->aString);
+        $this->assertSame(7, $obj->anInteger);
+        $this->assertSame(false, $obj->aBoolean);
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertSame(20.0, $obj->aDouble);
+        $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
+        $this->assertSame(true,$obj->childValueBool);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+    }
+
     private function assertListIteration($index, GraphObjectBase $obj)
     {
         $this->assertSame('astringvalue'.$index,$obj->aString);
