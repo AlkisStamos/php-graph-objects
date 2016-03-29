@@ -320,12 +320,18 @@ class Type
                     if(strpos($expected,'.') !== false)
                     {
                         $matched = $this->matchNested(explode('.',$expected),$payload,$scenario,$found);
-                        break;
+                        if($found)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
                         $matched = $this->matchValue($expected,$payload,$scenario,$found);
-                        break;
+                        if($found)
+                        {
+                            break;
+                        }
                     }
                 }
             }
