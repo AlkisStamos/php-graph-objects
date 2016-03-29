@@ -204,6 +204,17 @@ class Type
     }
 
     /**
+     * Constructs the type with a mixed adapter. The mixed adapter defines a mixed type where the value will be mapped
+     * as is to the property.
+     *
+     * @return Type
+     */
+    public static function Mixed()
+    {
+        return new self(null,new MixedTypeAdapter());
+    }
+
+    /**
      * Sets the property that is defined by the type as important. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *

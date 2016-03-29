@@ -152,6 +152,23 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
     }
 
+    public function testMixedValue()
+    {
+        $data = require 'mock/simple.php';
+        $obj = GraphSimple::map($data);
+        $this->assertSame(5,$obj->simpleInteger);
+        $this->assertSame('a sample string',$obj->simpleString);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj->simpleMixed);
+        $this->assertSame(10,$obj->simpleMixed->simpleInteger);
+        $this->assertSame('another sample string',$obj->simpleMixed->simpleString);
+        $this->assertTrue(Util::arrays_are_similar(array(1,2,3), $obj->simpleMixed->simpleMixed));
+        unset($data['simple-mixed']);
+        $obj = GraphSimple::map($data);
+        $this->assertSame(5,$obj->simpleInteger);
+        $this->assertSame('a sample string',$obj->simpleString);
+        $this->assertSame('123',$obj->simpleMixed);
+    }
+
     private function assertListIteration($index, GraphObjectBase $obj)
     {
         $this->assertSame('astringvalue'.$index,$obj->aString);

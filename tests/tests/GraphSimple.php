@@ -18,6 +18,10 @@ class GraphSimple implements Graphable
 
     public $simpleInteger;
     public $simpleString;
+    /**
+     * @var string|int|GraphSimple|array
+     */
+    public $simpleMixed;
 
     public static function create()
     {
@@ -34,7 +38,10 @@ class GraphSimple implements Graphable
             ->expected(['simpleInt','simple-int']),
             'simpleString'      => Type::String()
             ->bindTo(['simple-string','simple_string'])
-            ->expected(['simpleString','simple-str'])
+            ->expected(['simpleString','simple-str']),
+            'simpleMixed'       => Type::Mixed()
+            ->bindTo(['simple-mixed'])
+            ->expected(['mixed-simple'])
         ]);
     }
 }
