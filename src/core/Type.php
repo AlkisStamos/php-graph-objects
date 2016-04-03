@@ -20,6 +20,7 @@ class Type
      * Formats the property as important. Important properties must exist in the target payload and must have a valid
      * value. In any other case the graph will crash throwing an exception.
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
     public static $_IMPORTANT  = 'I';
@@ -27,6 +28,7 @@ class Type
      * Formats the property as required. Required properties must exist in the payload the graph engine will map them
      * even if their value is invalid.
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
     public static $_REQUIRED   = 'R';
@@ -35,6 +37,7 @@ class Type
      * defaults to optional meaning that the engine will assign an empty value to the property or the default value
      * passed by the constructor
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
     public static $_OPTIONAL   = 'O';
@@ -87,10 +90,14 @@ class Type
      */
     protected $bindings;
     /**
+     * Consists of custom indexes (or Types) to pass to a custom defined adapter when using the mixed type.
+     *
      * @var array|null
      */
     protected $applyIndexes;
     /**
+     * Flag to determine if there is a custom adapter passed through the mixed type.
+     *
      * @var bool
      */
     protected $isCustom;
@@ -223,6 +230,7 @@ class Type
      * Sets the property that is defined by the type as important. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
      */
     public function important()
@@ -235,6 +243,7 @@ class Type
      * Sets the property that is defined by the type as optional. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
      */
     public function optional()
@@ -247,6 +256,7 @@ class Type
      * Sets the property that is defined by the type as required. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
+     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
      */
     public function required()
@@ -303,6 +313,13 @@ class Type
         return $this;
     }
 
+    /**
+     * Will fill the apply array with the indexes defined. The apply array may consist of custom indexes (or Types) to
+     * pass to a custom defined adapter when using the mixed type.
+     *
+     * @param array $indexes
+     * @return $this
+     */
     public function apply(array $indexes)
     {
         $this->applyIndexes = $indexes;
