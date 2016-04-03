@@ -11,7 +11,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
 
-        $nestedData = require 'mock/nested.php';
+        $nestedData = Util::loadData('nested');
         $obj->mapProperty($nestedData,'nested');
         $this->assertNested($obj->nested);
         $this->assertNull($obj->child);
@@ -19,7 +19,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->property);
         $this->assertNull($obj->anotherProperty);
 
-        $childData = require 'mock/child.php';
+        $childData = Util::loadData('child');
         $obj->mapProperty($childData,'child');
         $this->assertChild($obj->child);
         $this->assertNested($obj->nested);
@@ -27,7 +27,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->property);
         $this->assertNull($obj->anotherProperty);
 
-        $listData = require 'mock/list.php';
+        $listData = Util::loadData('list');
         $obj->mapProperty($listData,'list');
         $this->assertList($obj->list);
         $this->assertChild($obj->child);
@@ -35,7 +35,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->property);
         $this->assertNull($obj->anotherProperty);
 
-        $extraData = require 'mock/step_properties.php';
+        $extraData = Util::loadData('step_properties');
         $obj->mapEmpty($extraData);
         $this->assertList($obj->list);
         $this->assertChild($obj->child);
@@ -47,7 +47,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
 
     public function testMapObjectStepByStep_withCreated()
     {
-        $extraData = require 'mock/step_properties.php';
+        $extraData = Util::loadData('step_properties');
         $obj = GraphObjectStep::map($extraData);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
         $this->assertSame('aproperty',$obj->property);
@@ -56,7 +56,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->list);
         $this->assertNull($obj->nested);
 
-        $nestedData = require 'mock/nested.php';
+        $nestedData = Util::loadData('nested');
         $obj->mapEmpty(array('nested'=>$nestedData));
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
         $this->assertSame('aproperty',$obj->property);
@@ -65,7 +65,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->child);
         $this->assertNull($obj->list);
 
-        $listData = require 'mock/list.php';
+        $listData = Util::loadData('list');
         $obj->mapEmpty(array('list'=>$listData));
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
         $this->assertSame('aproperty',$obj->property);
@@ -74,7 +74,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
         $this->assertList($obj->list);
         $this->assertNull($obj->child);
 
-        $childData = require 'mock/child.php';
+        $childData = Util::loadData('child');
         $obj->mapEmpty(array('child'=>$childData));
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
         $this->assertSame('aproperty',$obj->property);
@@ -88,7 +88,7 @@ class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
     public function testMapObjectStepByStep_changeStepValue()
     {
         $obj = $this->testMapObjectStepByStep_withCreated();
-        $diffChildData = require 'mock/chid_parent_diff.php';
+        $diffChildData = Util::loadData('child_parent_diff');
         $obj->mapProperty($diffChildData,'child');
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
         $this->assertSame('aproperty',$obj->property);

@@ -19,9 +19,11 @@ class MixedTypeAdapter implements TypeAdapter
      *
      * @param mixed $from The incoming data
      * @param Type $pattern The property type
+     * @param $name
+     * @param $scenario
      * @return mixed
      */
-    public function map($from, Type $pattern)
+    public function map($from, Type $pattern, $name, $scenario)
     {
         return new Value(true,$from);
     }

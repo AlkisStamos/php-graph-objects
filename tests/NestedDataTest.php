@@ -11,7 +11,7 @@ class NestedDataTest extends \PHPUnit_Framework_TestCase
 {
     public function testNestedDataMap()
     {
-        $data = require 'mock/nested_data.php';
+        $data = Util::loadData('nested_data');
         $obj = GraphObjectNestedData::map($data);
         $this->assertSame(65987,$obj->_id);
         $this->assertSame(17,$obj->integer);
@@ -35,5 +35,20 @@ class NestedDataTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(true,$obj->child->childValueBool);
 
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNestedData',$obj);
+    }
+
+    public function testNestedMapping()
+    {
+        $data = Util::loadData('nested');
+        $obj = GraphObjectNest::map($data);
+        $this->assertSame('thisisastringnested',$obj->ownProperty);
+        $this->assertSame('astringvalue', $obj->child->aString);
+        $this->assertSame(12, $obj->child->anInteger);
+        $this->assertSame(true, $obj->child->aBoolean);
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->child->flatArray));
+        $this->assertSame(10.5, $obj->child->aDouble);
+        $this->assertSame('anotherstringvaluewithdiff', $obj->child->childValueStr);
+        $this->assertSame(false,$obj->child->childValueBool);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj);
     }
 }

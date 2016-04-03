@@ -6,7 +6,7 @@ class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
 {
     public function testCallbacksWithScenario()
     {
-        $data = require 'mock/child_expected.php';
+        $data = Util::loadData('child_expected');
         $scenario = 'test-scenario';
         $obj = GraphObjectGrandChildWithCallbacks::map($data,$scenario);
         $this->assertSame('astringvalue', $obj->aString);
@@ -21,7 +21,7 @@ class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
 
     public function testNonCallbackOverrideScenario()
     {
-        $data = require 'mock/child_expected.php';
+        $data = Util::loadData('child_expected');
         $scenario = 'test-normal-scenario';
         $obj = GraphObjectGrandChildWithCallbacks::map($data,$scenario);
         $this->assertSame('astringvalue', $obj->aString);
@@ -36,7 +36,7 @@ class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
 
     public function testFinalizeInject()
     {
-        $data = require 'mock/base.php';
+        $data = Util::loadData('base');
         $obj = GraphObjectBase::inject($data,'test-finalize-inject');
         $this->assertSame('thisisthefinalizedstring', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
@@ -48,7 +48,7 @@ class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
 
     public function testFinalizeMap()
     {
-        $data = require 'mock/child.php';
+        $data = Util::loadData('child');
         $obj = GraphObjectChild::map($data,'test-finalize-map');
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);

@@ -10,24 +10,31 @@ namespace Nuad\Graph;
 
 class FlatTypeAdapter implements TypeAdapter
 {
-    public function map($from, Type $pattern)
+    public function map($from, Type $pattern, $name, $scenario)
     {
-        if(is_array($pattern->value) && is_array($from))
+        if($pattern->value === Property::$_ARRAY_TYPE)
         {
-            return new Value(true,$from);
+            if(is_array($from))
+            {
+                return new Value(true,$from);
+            }
+            else if(is_object($from))
+            {
+                return new Value(true,(array)$from);
+            }
         }
-        if(is_int($pattern->value))
+        else if($pattern->value === Property::$_INTEGER_TYPE)
         {
             if(is_int($from))
             {
                 return new Value(true,$from);
             }
-            else if(is_string($from))
+            else if(is_numeric($from))
             {
                 return new Value(true,(int)$from);
             }
         }
-        else if(is_bool($pattern->value))
+        else if($pattern->value === Property::$_BOOLEAN_TYPE)
         {
             if(is_bool($from))
             {
@@ -38,38 +45,32 @@ class FlatTypeAdapter implements TypeAdapter
                 return new Value(true,filter_var($from,FILTER_VALIDATE_BOOLEAN));
             }
         }
-        else if(is_float($pattern->value))
+        else if($pattern->value === Property::$_DOUBLE_TYPE)
         {
             if(is_float($from))
             {
                 return new Value(true,$from);
             }
-            else if(is_string($from))
+            else if(is_numeric($from))
             {
                 return new Value(true,(double)$from);
             }
         }
-        else if(is_string($pattern->value) && is_string($from))
+        else if($pattern->value === Property::$_STRING_TYPE)
         {
-            return new Value(true,$from);
+            if(is_string($from))
+            {
+                return new Value(true,$from);
+            }
+            else if(is_numeric($from))
+            {
+                return new Value(true,(string)$from);
+            }
+            else if(is_bool($from))
+            {
+                return new Value(true,$from === true ? 'true' : 'false');
+            }
         }
         return null;
-    }
-
-    private static function isSimpleType($type)
-    {
-        return $type === 'string'
-        || $type === 'boolean' || $type === 'bool'
-        || $type === 'integer' || $type === 'int'
-        || $type === 'float' || $type === 'array' || $type === 'object';
-    }
-
-    private static function isFlatType($type)
-    {
-        return $type === 'NULL'
-        || $type === 'string'
-        || $type === 'boolean' || $type === 'bool'
-        || $type === 'integer' || $type === 'int'
-        || $type === 'double';
     }
 } 

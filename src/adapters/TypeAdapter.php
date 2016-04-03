@@ -16,7 +16,9 @@ interface TypeAdapter
      *
      * @param mixed $from The incoming data
      * @param Type $pattern The property type
+     * @param string $name
+     * @param mixed $scenario
      * @return mixed
      */
-    public function map($from, Type $pattern);
+    public function map($from, Type $pattern, $name, $scenario);
 }

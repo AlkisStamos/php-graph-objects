@@ -7,7 +7,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 {
     public function testMapObjectBase()
     {
-        $data = require 'mock/base.php';
+        $data = Util::loadData('base');
         $obj = GraphObjectBase::map($data);
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
@@ -19,7 +19,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectObjectBase()
     {
-        $data = require 'mock/base.php';
+        $data = Util::loadData('base');
         $obj = GraphObjectBase::inject($data);
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
@@ -31,7 +31,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectObjectBase_withTypecast()
     {
-        $data = require 'mock/base_weak_types.php';
+        $data = Util::loadData('base_weak_types');
         $obj = GraphObjectBase::map($data);
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
@@ -43,7 +43,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testMapInheritance()
     {
-        $data = require 'mock/child.php';
+        $data = Util::loadData('child');
         $obj = GraphObjectChild::map($data);
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(5, $obj->anInteger);
@@ -57,21 +57,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testInjectInheritance()
     {
-        $data = require 'mock/child.php';
-        $obj = GraphObjectChild::inject($data);
-        $this->assertSame('astringvalue', $obj->aString);
-        $this->assertSame(7, $obj->anInteger);
-        $this->assertSame(false, $obj->aBoolean);
-        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
-        $this->assertSame(5.5, $obj->aDouble);
-        $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
-        $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
-    }
-
-    public function testInjectInheritance_withExpectedValues()
-    {
-        $data = require 'mock/child_expected.php';
+        $data = Util::loadData('child');
         $obj = GraphObjectChild::inject($data);
         $this->assertSame('astringvalue', $obj->aString);
         $this->assertSame(7, $obj->anInteger);
@@ -85,8 +71,8 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testMapEmpty()
     {
-        $dataBase = require 'mock/base_weak_types.php';
-        $dataChild = require 'mock/chid_parent_diff.php';
+        $dataBase = Util::loadData('base_weak_types');
+        $dataChild = Util::loadData('child_parent_diff');
         $obj = GraphObjectChild::map($dataBase);
         $obj->mapEmpty($dataChild);
         $this->assertSame('astringvalue', $obj->aString);
@@ -99,24 +85,9 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
     }
 
-    public function testNestedMapping()
-    {
-        $data = require 'mock/nested.php';
-        $obj = GraphObjectNest::map($data);
-        $this->assertSame('thisisastringnested',$obj->ownProperty);
-        $this->assertSame('astringvalue', $obj->child->aString);
-        $this->assertSame(12, $obj->child->anInteger);
-        $this->assertSame(true, $obj->child->aBoolean);
-        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->child->flatArray));
-        $this->assertSame(10.5, $obj->child->aDouble);
-        $this->assertSame('anotherstringvaluewithdiff', $obj->child->childValueStr);
-        $this->assertSame(false,$obj->child->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj);
-    }
-
     public function testListMapping()
     {
-        $data = require 'mock/list.php';
+        $data = Util::loadData('list');
         $obj = GraphObjectList::map($data);
         $this->assertArrayHasKey('one',$obj->assoc);
         $this->assertArrayHasKey('two',$obj->assoc);
@@ -139,7 +110,7 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
 
     public function testDefaultValue()
     {
-        $data = require 'mock/child.php';
+        $data = Util::loadData('child');
         unset($data['aDouble']);
         $obj = GraphObjectChild::inject($data);
         $this->assertSame('astringvalue', $obj->aString);
@@ -150,23 +121,6 @@ class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
-    }
-
-    public function testMixedValue()
-    {
-        $data = require 'mock/simple.php';
-        $obj = GraphSimple::map($data);
-        $this->assertSame(5,$obj->simpleInteger);
-        $this->assertSame('a sample string',$obj->simpleString);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj->simpleMixed);
-        $this->assertSame(10,$obj->simpleMixed->simpleInteger);
-        $this->assertSame('another sample string',$obj->simpleMixed->simpleString);
-        $this->assertTrue(Util::arrays_are_similar(array(1,2,3), $obj->simpleMixed->simpleMixed));
-        unset($data['simple-mixed']);
-        $obj = GraphSimple::map($data);
-        $this->assertSame(5,$obj->simpleInteger);
-        $this->assertSame('a sample string',$obj->simpleString);
-        $this->assertSame('123',$obj->simpleMixed);
     }
 
     private function assertListIteration($index, GraphObjectBase $obj)

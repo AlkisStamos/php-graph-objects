@@ -20,4 +20,10 @@ class Util
         }
         return true;
     }
+
+    public static function loadData($key)
+    {
+        $data = require 'mock/data.php';
+        return $data[$key];
+    }
 }

@@ -19,12 +19,14 @@ class CollectionAdapter implements TypeAdapter
      * the type of the objects in the collection. The method uses that instance to clone as many objects as
      * it must.
      *
-     * @param $from
+     * @param mixed $from
      * @param Type $pattern
+     * @param $name
+     * @param $scenario
      * @return Value|null
      * @throws GraphTypeException
      */
-    public function map($from, Type $pattern)
+    public function map($from, Type $pattern, $name, $scenario)
     {
         if(!is_array($from))
         {

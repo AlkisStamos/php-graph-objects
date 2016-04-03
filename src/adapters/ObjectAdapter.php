@@ -10,7 +10,7 @@ namespace Nuad\Graph;
 
 class ObjectAdapter implements TypeAdapter
 {
-    public function map($from, Type $pattern)
+    public function map($from, Type $pattern, $name, $scenario)
     {
         return new Value(true,$pattern->value->map($from));
     }

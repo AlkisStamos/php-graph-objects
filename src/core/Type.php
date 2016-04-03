@@ -78,14 +78,22 @@ class Type
      *
      * @var callable
      */
-    private $mapCallback;
+    protected $mapCallback;
     /**
      * Excepted property names in the payload. The difference is that the bindings names will override the property
      * names and will be chosen first.
      *
      * @var array
      */
-    private $bindings;
+    protected $bindings;
+    /**
+     * @var array|null
+     */
+    protected $applyIndexes;
+    /**
+     * @var bool
+     */
+    protected $isCustom;
 
     /**
      * Private and final constructor. The type object can only be instantiated though its static methods in order to
@@ -103,17 +111,7 @@ class Type
         $this->bindings = array();
         $this->default = null;
         $this->mapCallback = null;
-    }
-
-    /**
-     * Constructs a flat (string, boolean etc) type adapter. If the type of the incoming data are flat but unknown type
-     * this method should be used. It will instantiate the type as string and bound the incoming value as such.
-     *
-     * @return Type
-     */
-    public static function flat()
-    {
-        return new self('', new FlatTypeAdapter());
+        $this->applyIndexes = null;
     }
 
     /**
@@ -124,7 +122,7 @@ class Type
      */
     public static function String()
     {
-        return new self('', new FlatTypeAdapter());
+        return new self(Property::$_STRING_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -134,7 +132,7 @@ class Type
      */
     public static function Boolean()
     {
-        return new self(false, new FlatTypeAdapter());
+        return new self(Property::$_BOOLEAN_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -144,7 +142,7 @@ class Type
      */
     public static function Float()
     {
-        return new self(0.0, new FlatTypeAdapter());
+        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -154,7 +152,7 @@ class Type
      */
     public static function Double()
     {
-        return new self(0.0, new FlatTypeAdapter());
+        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -164,7 +162,7 @@ class Type
      */
     public static function Integer()
     {
-        return new self(1, new FlatTypeAdapter());
+        return new self(Property::$_INTEGER_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -176,7 +174,7 @@ class Type
      */
     public static function FlatArray()
     {
-        return new self(array(), new FlatTypeAdapter());
+        return new self(Property::$_ARRAY_TYPE, new FlatTypeAdapter());
     }
 
     /**
@@ -207,11 +205,18 @@ class Type
      * Constructs the type with a mixed adapter. The mixed adapter defines a mixed type where the value will be mapped
      * as is to the property.
      *
+     * @param TypeAdapter $customAdapter
      * @return Type
      */
-    public static function Mixed()
+    public static function Mixed(TypeAdapter $customAdapter=null)
     {
-        return new self(null,new MixedTypeAdapter());
+        if($customAdapter === null)
+        {
+            return new self(null,new MixedTypeAdapter());
+        }
+        $type = new Type(null,$customAdapter);
+        $type->isCustom = true;
+        return $type;
     }
 
     /**
@@ -298,6 +303,12 @@ class Type
         return $this;
     }
 
+    public function apply(array $indexes)
+    {
+        $this->applyIndexes = $indexes;
+        return $this;
+    }
+
     /**
      * Method to parse the incoming payload data array and will try to find a key matching the passed property name
      * (or the expected array). If found the method will apply the defined adapter to the data to map the data to the
@@ -310,6 +321,29 @@ class Type
      */
     public function match($name, Array $payload, $scenario)
     {
+        if($this->isCustom)
+        {
+            if($this->applyIndexes !== null)
+            {
+                $custom = array();
+                foreach($this->applyIndexes as $key=>$value)
+                {
+                    if($value instanceof Type)
+                    {
+                        $customValue = $value->match($key,$payload,$scenario);
+                        $custom[is_int($key) ? $value : $key] = $customValue instanceof Value ?
+                            $customValue->value :
+                            $customValue;
+                        continue;
+                    }
+                    $custom[is_int($key) ? $value : $key] = (strpos($value,'.') !== false) ?
+                        $this->matchNested(explode('.',$value),$payload,$scenario,$found,true) :
+                        self::matchRawValue($value,$payload,$found);
+                }
+                return new Value(true, $this->adapter->map($custom,$this,$name,$scenario));
+            }
+            return new Value(true, $this->adapter->map($payload,$this,$name,$scenario));
+        }
         foreach($this->bindings as $binding)
         {
             $matched = (strpos($binding,'.') !== false) ?
@@ -370,7 +404,7 @@ class Type
         {
             $callback = self::runMapCallback($this->mapCallback,$val,$name,$scenario);
         }
-        return $callback === null ? $this->adapter->map($val,$this) : new Value(true,$callback);
+        return $callback === null ? $this->adapter->map($val, $this, $name, $scenario) : new Value(true,$callback);
     }
 
     /**
@@ -424,9 +458,10 @@ class Type
      * @param array $payload
      * @param $scenario
      * @param $matched
+     * @param $raw
      * @return mixed|Value|null
      */
-    private function matchNested(array $profile, array $payload, $scenario, &$matched)
+    private function matchNested(array $profile, array $payload, $scenario, &$matched, $raw=false)
     {
         $matchedValue = null;
         $matched = false;
@@ -441,9 +476,8 @@ class Type
             }
             else if(!isset($profile[$profileIndex + 1]))
             {
-                $matchedValue = $this->map($profileItem,$value,$scenario);
                 $matched = true;
-                return $matchedValue;
+                return $raw ? $value : $this->map($profileItem,$value,$scenario);
             }
             else
             {

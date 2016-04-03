@@ -11,7 +11,7 @@ class GraphExpectedTest extends \PHPUnit_Framework_TestCase
 {
     public function testPreferredSelection()
     {
-        $data = require 'mock/expected.php';
+        $data = Util::loadData('expected');
         $obj = GraphObjectExpected::map($data);
         $this->assertSame('string-bind-first',$obj->string);
         $this->assertSame(11,$obj->integer);
@@ -30,7 +30,7 @@ class GraphExpectedTest extends \PHPUnit_Framework_TestCase
 
     public function testSecondaryExpectedValues()
     {
-        $data = require 'mock/expected.php';
+        $data = Util::loadData('expected');
         unset($data['simpleInteger']);
         unset($data['simple-integer']);
         unset($data['simple_integer']);
@@ -63,5 +63,19 @@ class GraphExpectedTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(1,$obj->simple->simpleInteger);
         $this->assertSame('simple-string-default',$obj->simple->simpleString);
         $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj->simple);
+    }
+
+    public function testInjectInheritance_withExpectedValues()
+    {
+        $data = Util::loadData('child_expected');
+        $obj = GraphObjectChild::inject($data);
+        $this->assertSame('astringvalue', $obj->aString);
+        $this->assertSame(7, $obj->anInteger);
+        $this->assertSame(false, $obj->aBoolean);
+        $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
+        $this->assertSame(5.5, $obj->aDouble);
+        $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
+        $this->assertSame(true,$obj->childValueBool);
+        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
     }
 }
