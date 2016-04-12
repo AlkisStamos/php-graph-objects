@@ -94,6 +94,7 @@ trait GraphAdapter
                 }
             }
             $graph->complete($obj, $scenario, $data);
+            $obj->finalize($scenario, $data);
         }
         return $obj;
     }
@@ -124,6 +125,7 @@ trait GraphAdapter
             }
         }
         $graph->complete($obj, $scenario, $data);
+        $obj->finalize($scenario, $data);
         return $obj;
     }
 
@@ -150,6 +152,7 @@ trait GraphAdapter
                 $obj->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
             }
             $graph->complete($obj, $scenario, $data);
+            $obj->finalize($scenario, $data);
         }
         return $obj;
     }
@@ -187,6 +190,7 @@ trait GraphAdapter
                 }
             }
             $graph->complete($this, $scenario, $data);
+            $this->finalize($scenario, $data);
         }
         return $this;
     }
@@ -278,4 +282,14 @@ trait GraphAdapter
         }
         return $obj;
     }
+
+    /**
+     * Method implemented by the trait to replicate the entity's complete method. The method signature does nothing but
+     * being called. Is here for any Graphable object to override and provide a simple way to implement a map finalize
+     * method. The method provides access to the scenario and the data (the instance being the object itself).
+     *
+     * @param string $scenario
+     * @param array $data
+     */
+    public function finalize($scenario, array $data){}
 }

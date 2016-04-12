@@ -39,4 +39,14 @@ interface Graphable
      * @return $this The fully mapped object
      */
     public static function map(Array $data);
+
+    /**
+     * Method that replicates the entity's complete method. The method provides access to the scenario and the data
+     * (the instance being the object itself). It should be called by hydrators as soon as the object is mapped.
+     *
+     * @param string $scenario
+     * @param array $data
+     * @return void
+     */
+    public function finalize($scenario, array $data);
 } 

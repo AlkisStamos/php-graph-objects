@@ -54,4 +54,12 @@ class GraphObjectChild extends GraphObjectBase
             }
         });
     }
+
+    public function finalize($scenario, array $data)
+    {
+        if($scenario === 'test-finalize-callback')
+        {
+            $this->aString = $scenario;
+        }
+    }
 }
