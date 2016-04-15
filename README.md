@@ -271,7 +271,7 @@ Features
    ```
 * **Callbacks**:
 
-   The Entity takes a finalize callback (through the finalize() method) which gives access to the mapped object and the raw data as soon as the mapping is complete, can be used to validate object properties before continuing. A Graphable object can also access the finalize callback by implementing the finalize() method itself which gives access to the scenario and the data (the instance being the object itself).
+   The Entity takes a finalize callback (through the finalize() method) which gives access to the mapped object and the raw data as soon as the mapping is complete, can be used to validate object properties before continuing.
 
    The Type takes a handler callback (through the handler() method) which will provide access to the data found in the payload for that property and the index where the data were found. If defined the returned value of the handler will be used instead, if the handler callback returns null the adapter will continue to map the property normally.
     ```
