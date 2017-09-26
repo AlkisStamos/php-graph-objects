@@ -6,6 +6,11 @@
          beStrictAboutTestSize="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          checkForUnintentionallyCoveredCode="true">
+    <testsuites>
+        <testsuite name="PHP Graph Objects">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist>
             <directory suffix=".php">../src/</directory>

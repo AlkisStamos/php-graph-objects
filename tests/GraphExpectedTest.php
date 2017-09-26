@@ -7,7 +7,9 @@
 
 namespace Nuad\Graph\Test;
 
-class GraphExpectedTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class GraphExpectedTest extends TestCase
 {
     public function testPreferredSelection()
     {

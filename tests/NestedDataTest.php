@@ -7,7 +7,9 @@
 
 namespace Nuad\Graph\Test;
 
-class NestedDataTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class NestedDataTest extends TestCase
 {
     public function testNestedDataMap()
     {

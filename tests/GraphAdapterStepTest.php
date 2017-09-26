@@ -3,7 +3,9 @@
 namespace Nuad\Graph\Test;
 
 
-class GraphAdapterStepTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class GraphAdapterStepTest extends TestCase
 {
     public function testMapObjectStepByStep_withEmpty()
     {

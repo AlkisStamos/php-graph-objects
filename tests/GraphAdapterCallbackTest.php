@@ -2,7 +2,9 @@
 
 namespace Nuad\Graph\Test;
 
-class GraphAdapterCallbackTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class GraphAdapterCallbackTest extends TestCase
 {
     public function testCallbacksWithScenario()
     {

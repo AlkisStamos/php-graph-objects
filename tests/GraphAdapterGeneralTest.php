@@ -3,7 +3,9 @@
 namespace Nuad\Graph\Test;
 
 
-class GraphAdapterGeneralTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class GraphAdapterGeneralTest extends TestCase
 {
     public function testMapObjectBase()
     {
