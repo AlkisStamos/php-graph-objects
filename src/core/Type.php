@@ -378,7 +378,6 @@ class Type
             {
                 if(!$checked)
                 {
-                    $this->expected[$expected] = true;
                     if(strpos($expected,'.') !== false)
                     {
                         $matched = $this->matchNested(explode('.',$expected),$payload,$scenario,$found);

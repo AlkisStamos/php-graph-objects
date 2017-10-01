@@ -23,12 +23,11 @@ trait GraphAdapter
      * keep things lighter the graph objects should implement this method themselves.
      *
      * @param bool|false $wReflection If passed as false the mapping method will not use the constructor
-     * @return $this The fully mapped graph object
+     * @return $this|Graphable The fully mapped graph object
      */
     public static function create($wReflection=false)
     {
-        $reflect = new \ReflectionClass(__CLASS__);
-        return !$wReflection ? $reflect->newInstanceWithoutConstructor() : $reflect;
+        return GraphFactory::create(__CLASS__,$wReflection);
     }
 
     /**
@@ -56,7 +55,7 @@ trait GraphAdapter
         }
         if($obj instanceof Graphable && $reflect instanceof \ReflectionClass)
         {
-            $graph = $obj->graph();
+            $graph = GraphFactory::getGraphMetadata($obj);
             $properties = array();
             foreach($graph->properties as $name=>$property)
             {
@@ -109,12 +108,12 @@ trait GraphAdapter
      * @param Graphable $obj The empty instance of the graph object
      * @param array $data The data to be mapped to the graph object
      * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
-     * @return $this The fully mapped object
+     * @return $this|Graphable The fully mapped object
      * @throws GraphTypeException
      */
     public static function injectWithInstance(Graphable $obj, Array $data, $scenario=null)
     {
-        $graph = $obj->graph();
+        $graph = GraphFactory::getGraphMetadata($obj);
         foreach($graph->properties as $name=>$property)
         {
             $valInject = self::mapInternalProperty($data,$name,$property,$scenario);
@@ -144,7 +143,7 @@ trait GraphAdapter
         $obj = self::create();
         if($obj instanceof Graphable)
         {
-            $graph = $obj->graph();
+            $graph = GraphFactory::getGraphMetadata($obj);
             foreach($graph->properties as $name=>$property)
             {
                 $obj->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
@@ -170,7 +169,7 @@ trait GraphAdapter
     {
         if($this instanceof Graphable)
         {
-            $graph = $this->graph();
+            $graph = GraphFactory::getGraphMetadata($this);
             foreach($graph->properties as $name=>$property)
             {
                 try
@@ -209,7 +208,7 @@ trait GraphAdapter
     {
         if($this instanceof Graphable)
         {
-            $entity = $this->graph();
+            $entity = GraphFactory::getGraphMetadata($this);
             if(!array_key_exists($propertyName,$entity->properties))
             {
                 throw new GraphTypeException('Property: '.$propertyName.' was not found on graph');
