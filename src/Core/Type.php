@@ -6,7 +6,15 @@
  * Time: 6:30 PM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Core;
+use Nuad\Graph\Adapters\CollectionAdapterInterface;
+use Nuad\Graph\Adapters\FlatTypeAdapterInterface;
+use Nuad\Graph\Adapters\MixedTypeAdapterInterface;
+use Nuad\Graph\Adapters\ObjectAdapterInterface;
+use Nuad\Graph\Adapters\TypeAdapterInterface;
+use Nuad\Graph\Graphable;
+use Nuad\Graph\GraphAdapter;
+
 /**
  * Metadata class that represents the type of a graph object's property. The class contains many methods that apply to
  * the property instead of strictly the type so that it would be clearer and easier to define the graph entity.
@@ -70,9 +78,9 @@ class Type
     public $value;
     /**
      * The graph adapter which will be responsible to map the data to the property. For each defined property the graph
-     * object will call the defined adapters map method to map the data.
+     * object will call the defined Adapters map method to map the data.
      *
-     * @var TypeAdapter
+     * @var TypeAdapterInterface
      */
     public $adapter;
     /**
@@ -107,9 +115,9 @@ class Type
      * provide correct initialization.
      *
      * @param $value
-     * @param TypeAdapter $adapter
+     * @param TypeAdapterInterface $adapter
      */
-    protected final function __construct($value, TypeAdapter $adapter)
+    protected final function __construct($value, TypeAdapterInterface $adapter)
     {
         $this->value = $value;
         $this->adapter = $adapter;
@@ -129,7 +137,7 @@ class Type
      */
     public static function String()
     {
-        return new self(Property::$_STRING_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_STRING_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -139,7 +147,7 @@ class Type
      */
     public static function Boolean()
     {
-        return new self(Property::$_BOOLEAN_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_BOOLEAN_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -149,7 +157,7 @@ class Type
      */
     public static function Float()
     {
-        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -159,7 +167,7 @@ class Type
      */
     public static function Double()
     {
-        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_DOUBLE_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -169,7 +177,7 @@ class Type
      */
     public static function Integer()
     {
-        return new self(Property::$_INTEGER_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_INTEGER_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -181,7 +189,7 @@ class Type
      */
     public static function FlatArray()
     {
-        return new self(Property::$_ARRAY_TYPE, new FlatTypeAdapter());
+        return new self(Property::$_ARRAY_TYPE, new FlatTypeAdapterInterface());
     }
 
     /**
@@ -193,7 +201,7 @@ class Type
      */
     public static function Object(Graphable $obj)
     {
-        return new self($obj, new ObjectAdapter());
+        return new self($obj, new ObjectAdapterInterface());
     }
 
     /**
@@ -205,21 +213,21 @@ class Type
      */
     public static function Collection(Graphable $obj)
     {
-        return new self(array($obj), new CollectionAdapter());
+        return new self(array($obj), new CollectionAdapterInterface());
     }
 
     /**
      * Constructs the type with a mixed adapter. The mixed adapter defines a mixed type where the value will be mapped
      * as is to the property.
      *
-     * @param TypeAdapter $customAdapter
+     * @param TypeAdapterInterface $customAdapter
      * @return Type
      */
-    public static function Mixed(TypeAdapter $customAdapter=null)
+    public static function Mixed(TypeAdapterInterface $customAdapter=null)
     {
         if($customAdapter === null)
         {
-            return new self(null,new MixedTypeAdapter());
+            return new self(null,new MixedTypeAdapterInterface());
         }
         $type = new Type(null,$customAdapter);
         $type->isCustom = true;

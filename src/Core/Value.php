@@ -6,7 +6,7 @@
  * Time: 9:39 AM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Core;
 
 class Value
 {

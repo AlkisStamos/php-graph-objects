@@ -7,6 +7,10 @@
  */
 
 namespace Nuad\Graph;
+use Nuad\Graph\Core\GraphTypeException;
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Core\Value;
+
 /**
  * The main mapping functionality is within this trait. Started as abstract class but with the trait nature it seems
  * easier to override methods of the main mapping functionality. A thing to consider is that when using inheritance

@@ -6,9 +6,13 @@
  * Time: 6:39 PM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Adapters;
 
-class FlatTypeAdapter implements TypeAdapter
+use Nuad\Graph\Core\Property;
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Core\Value;
+
+class FlatTypeAdapterInterface implements TypeAdapterInterface
 {
     public function map($from, Type $pattern, $name, $scenario)
     {

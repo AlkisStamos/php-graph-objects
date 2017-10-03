@@ -6,9 +6,12 @@
  * Time: 6:40 PM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Adapters;
 
-class ObjectAdapter implements TypeAdapter
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Core\Value;
+
+class ObjectAdapterInterface implements TypeAdapterInterface
 {
     public function map($from, Type $pattern, $name, $scenario)
     {

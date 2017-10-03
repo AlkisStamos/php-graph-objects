@@ -5,7 +5,7 @@
  * Date: 12/28/15
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Core;
 
 /**
  * Main and only exception class of the graph object library.

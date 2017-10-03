@@ -4,7 +4,7 @@ namespace Nuad\Graph\Test;
 
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphAdapter;
-use Nuad\Graph\Type;
+use Nuad\Graph\Core\Type;
 
 class GraphObjectGrandChildWithCallbacks extends GraphObjectChild implements Graphable
 {

@@ -7,6 +7,8 @@
 
 namespace Nuad\Graph;
 
+use Nuad\Graph\Core\Entity;
+
 /**
  * Factory to generate reflections, instances and object graphs. The factory implements an internal cache providing
  * performance on repeated hydrations of the same object.

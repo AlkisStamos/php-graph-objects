@@ -6,7 +6,7 @@
  */
 
 namespace Nuad\Graph\Test;
-use Nuad\Graph\Entity;
+
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphFactory;
 use PHPUnit\Framework\TestCase;

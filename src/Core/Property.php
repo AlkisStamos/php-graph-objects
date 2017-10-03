@@ -7,7 +7,8 @@
  * Projections
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Core;
+
 /**
  * Metadata class to represent a single property of a graph object.
  *

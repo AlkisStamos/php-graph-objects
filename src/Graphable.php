@@ -7,6 +7,8 @@
  */
 
 namespace Nuad\Graph;
+use Nuad\Graph\Core\Entity;
+
 /**
  * All graph objects must implement this interface in order to be used. Also every derived or contained object must also
  * be graphable in order to be graphed along with the main object.

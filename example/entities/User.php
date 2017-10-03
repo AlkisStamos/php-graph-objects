@@ -3,7 +3,7 @@
 namespace Nuad\Graph\Example;
 
 use Nuad\Graph\GraphAdapter;
-use Nuad\Graph\Type;
+use Nuad\Graph\Core\Type;
 
 class User extends Person
 {
@@ -54,7 +54,7 @@ class User extends Person
                 'friends'   => Type::Collection(Person::create())
             ]
         )
-        ->finalize(function(User $instance, $scenario, $data)
+        ->finalize(function(User $instance)
         {
             $instance->email .= '__appended_finalized_value';
         });

@@ -7,11 +7,11 @@
 
 namespace Nuad\Graph\Test;
 
-use Nuad\Graph\Entity;
+use Nuad\Graph\Core\Entity;
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphAdapter;
-use Nuad\Graph\Type;
-use Nuad\Graph\TypeAdapter;
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Adapters\TypeAdapterInterface;
 
 class GraphMixed implements Graphable
 {
@@ -32,8 +32,8 @@ class GraphMixed implements Graphable
             'GraphMixed'
         ])->properties([
             'mixedStandard' => Type::Mixed(),
-            'mixedCustom' => Type::Mixed(new CustomAdapterTest()),
-            'mixedCustomProperties' => Type::Mixed(new CustomAdapterTest())
+            'mixedCustom' => Type::Mixed(new CustomAdapterInterfaceTest()),
+            'mixedCustomProperties' => Type::Mixed(new CustomAdapterInterfaceTest())
                 ->apply([
                     'base' => Type::Object(GraphObjectBase::create())
                         ->bindTo(['objectNest.base']),
@@ -45,11 +45,11 @@ class GraphMixed implements Graphable
     }
 }
 
-class CustomAdapterTest implements TypeAdapter
+class CustomAdapterInterfaceTest implements TypeAdapterInterface
 {
 
     /**
-     * All type adapters must map the data to a property using this method. The method should use the patter type and
+     * All type Adapters must map the data to a property using this method. The method should use the patter type and
      * map the from payload to the property.
      *
      * @param mixed $from The incoming data

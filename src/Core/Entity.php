@@ -6,7 +6,8 @@
  * Time: 8:48 PM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Core;
+
 /**
  * Main class to contain all the name/type metadata of a graph object.
  *

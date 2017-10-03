@@ -2,10 +2,10 @@
 
 namespace Nuad\Graph\Example;
 
-use Nuad\Graph\Entity;
+use Nuad\Graph\Core\Entity;
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphAdapter;
-use Nuad\Graph\Type;
+use Nuad\Graph\Core\Type;
 
 class Point implements Graphable
 {

@@ -5,16 +5,20 @@
  * Time: 12:09 AM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Adapters;
+
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Core\Value;
+
 /**
  * Class MixedTypeAdapter
  * @package Nuad\Graph
  */
-class MixedTypeAdapter implements TypeAdapter
+class MixedTypeAdapterInterface implements TypeAdapterInterface
 {
 
     /**
-     * All type adapters must map the data to a property using this method. The method should use the patter type and
+     * All type Adapters must map the data to a property using this method. The method should use the patter type and
      * map the from payload to the property.
      *
      * @param mixed $from The incoming data

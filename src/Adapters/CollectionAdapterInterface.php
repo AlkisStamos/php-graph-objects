@@ -6,12 +6,17 @@
  * Time: 6:39 PM
  */
 
-namespace Nuad\Graph;
+namespace Nuad\Graph\Adapters;
+use Nuad\Graph\Graphable;
+use Nuad\Graph\Core\GraphTypeException;
+use Nuad\Graph\Core\Type;
+use Nuad\Graph\Core\Value;
+
 /**
  * Class CollectionAdapter
  * @package Nuad\Graph
  */
-class CollectionAdapter implements TypeAdapter
+class CollectionAdapterInterface implements TypeAdapterInterface
 {
     /**
      * Maps an array of objects to the graphable object. The method uses the object adapter for each entry.
