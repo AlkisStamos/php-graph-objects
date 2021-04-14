@@ -2,6 +2,9 @@
 
 namespace Nuad\Graph\Test;
 
+use Nuad\Graph\Test\Tests\GraphObjectBase;
+use Nuad\Graph\Test\Tests\GraphObjectChild;
+use Nuad\Graph\Test\Tests\GraphObjectGrandChildWithCallbacks;
 use PHPUnit\Framework\TestCase;
 
 class GraphAdapterCallbackTest extends TestCase
@@ -18,7 +21,7 @@ class GraphAdapterCallbackTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame($scenario.'child_val_str'.'anotherstringvalue', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     public function testNonCallbackOverrideScenario()
@@ -33,7 +36,7 @@ class GraphAdapterCallbackTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     public function testFinalizeInject()
@@ -45,7 +48,7 @@ class GraphAdapterCallbackTest extends TestCase
         $this->assertSame(false, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(7.0, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testFinalizeMap()
@@ -59,6 +62,6 @@ class GraphAdapterCallbackTest extends TestCase
         $this->assertSame(7.0, $obj->aDouble);
         $this->assertSame('anotherstringvalue__append_finalize_value', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 }

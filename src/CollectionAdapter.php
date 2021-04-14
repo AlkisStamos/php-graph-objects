@@ -28,24 +28,20 @@ class CollectionAdapter implements TypeAdapter
      */
     public function map($from, Type $pattern, $name, $scenario)
     {
-        if(!is_array($from))
-        {
+        if (!is_array($from)) {
             return null;
         }
-        if(!array_key_exists(0,$pattern->value))
-        {
+        if (!array_key_exists(0, $pattern->value)) {
             throw new GraphTypeException('Graph collection did not define a type');
         }
         $graph = clone $pattern->value[0];
-        if($graph instanceof Graphable)
-        {
+        if ($graph instanceof Graphable) {
             $collection = array();
-            foreach($from as $value)
-            {
+            foreach ($from as $value) {
                 $collection[] = $graph->map($value);
                 $graph = clone $pattern->value[0];
             }
-            return new Value(true,$collection);
+            return new Value(true, $collection);
         }
         return null;
     }

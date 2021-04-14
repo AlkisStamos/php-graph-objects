@@ -13,51 +13,51 @@ return array(
     'base' => array(
         'aString' => 'astringvalue',
         'anInteger' => 5,
-        'aBoolean'  => false,
+        'aBoolean' => false,
         'flatArray' => array(
-            'a','b','c','d'
+            'a', 'b', 'c', 'd'
         ),
-        'aDouble'   => 5.5
+        'aDouble' => 5.5
     ),
     'base_weak_types' => array(
         'aString' => 'astringvalue',
         'anInteger' => '5',
-        'aBoolean'  => 'false',
+        'aBoolean' => 'false',
         'flatArray' => array(
-            'a','b','c','d'
+            'a', 'b', 'c', 'd'
         ),
-        'aDouble'   => '5.5'
+        'aDouble' => '5.5'
     ),
     'child_parent_diff' => array(
         'aString' => 'adiffvalue',
         'anInteger' => 12,
-        'aBoolean'  => true,
+        'aBoolean' => true,
         'flatArray' => array(
-            'e','f','g','h'
+            'e', 'f', 'g', 'h'
         ),
-        'aDouble'   => 10.5,
+        'aDouble' => 10.5,
         'childValueStr' => 'anotherstringvaluewithdiff',
         'childValueBool' => false
     ),
     'child' => array(
         'aString' => 'astringvalue',
         'anInteger' => 5,
-        'aBoolean'  => false,
+        'aBoolean' => false,
         'flatArray' => array(
-            'a','b','c','d'
+            'a', 'b', 'c', 'd'
         ),
-        'aDouble'   => 5.5,
+        'aDouble' => 5.5,
         'childValueStr' => 'anotherstringvalue',
         'childValueBool' => true
     ),
     'child_expected' => array(
         'aString' => 'astringvalue',
         'integer_val' => 5,
-        'aBoolean'  => false,
+        'aBoolean' => false,
         'flatArray' => array(
-            'a','b','c','d'
+            'a', 'b', 'c', 'd'
         ),
-        'aDouble'   => 5.5,
+        'aDouble' => 5.5,
         'child_val_str' => 'anotherstringvalue',
         'child_val_bool' => true
     ),
@@ -75,7 +75,7 @@ return array(
         'str' => 'string-bind-first',
         '__string' => 'string-expected-first',
         'string__' => 'string-expected-second',
-        'str_val'  => 'string-expected-third',
+        'str_val' => 'string-expected-third',
         'string' => 'string-default',
 
         'integer' => '0',
@@ -136,11 +136,11 @@ return array(
             'child' => array(
                 'aString' => 'astringvalue',
                 'anInteger' => 12,
-                'aBoolean'  => true,
+                'aBoolean' => true,
                 'flatArray' => array(
                     'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 10.5,
+                'aDouble' => 10.5,
                 'childValueStr' => 'anotherstringvaluewithdiff',
                 'childValueBool' => false
             )
@@ -149,29 +149,29 @@ return array(
             array(
                 'aString' => 'astringvalue0',
                 'anInteger' => 0,
-                'aBoolean'  => false,
+                'aBoolean' => false,
                 'flatArray' => array(
-                    'a','b','c','d'
+                    'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 0.5
+                'aDouble' => 0.5
             ),
             array(
                 'aString' => 'astringvalue1',
                 'anInteger' => 1,
-                'aBoolean'  => false,
+                'aBoolean' => false,
                 'flatArray' => array(
-                    'a','b','c','d'
+                    'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 1.5
+                'aDouble' => 1.5
             ),
             array(
                 'aString' => 'astringvalue2',
                 'anInteger' => 2,
-                'aBoolean'  => false,
+                'aBoolean' => false,
                 'flatArray' => array(
-                    'a','b','c','d'
+                    'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 2.5
+                'aDouble' => 2.5
             )
         )
     ),
@@ -180,11 +180,11 @@ return array(
         'child' => array(
             'aString' => 'astringvalue',
             'anInteger' => 12,
-            'aBoolean'  => true,
+            'aBoolean' => true,
             'flatArray' => array(
                 'a', 'b', 'c', 'd'
             ),
-            'aDouble'   => 10.5,
+            'aDouble' => 10.5,
             'childValueStr' => 'anotherstringvaluewithdiff',
             'childValueBool' => false
         )
@@ -194,7 +194,7 @@ return array(
         'flatNest' => array(
             'integer' => '17',
             'array' => array(
-                '12','13','14'
+                '12', '13', '14'
             ),
             'nest' => array(
                 'integer' => 356
@@ -204,21 +204,21 @@ return array(
             'base' => array(
                 'aString' => 'astringvalue',
                 'anInteger' => 5,
-                'aBoolean'  => false,
+                'aBoolean' => false,
                 'flatArray' => array(
-                    'a','b','c','d'
+                    'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 5.5
+                'aDouble' => 5.5
             ),
             'nest' => array(
                 'child' => array(
                     'aString' => 'astringvalue',
                     'anInteger' => 5,
-                    'aBoolean'  => false,
+                    'aBoolean' => false,
                     'flatArray' => array(
-                        'a','b','c','d'
+                        'a', 'b', 'c', 'd'
                     ),
-                    'aDouble'   => 5.5,
+                    'aDouble' => 5.5,
                     'childValueStr' => 'anotherstringvalue',
                     'childValueBool' => true
                 )
@@ -231,10 +231,10 @@ return array(
         'simple_integer' => 5,
         'simple-str' => 'a sample string',
         'simpleMixed' => '123',
-        'simple-mixed' => \Nuad\Graph\Test\GraphSimple::map([
+        'simple-mixed' => \Nuad\Graph\Test\Tests\GraphSimple::map([
             'simple_integer' => 10,
             'simple-str' => 'another sample string',
-            'simpleMixed' => [1,2,3]
+            'simpleMixed' => [1, 2, 3]
         ])
     ),
     'step_properties' => array(
@@ -270,11 +270,11 @@ return array(
             'base' => array(
                 'aString' => 'astringvalue',
                 'anInteger' => 5,
-                'aBoolean'  => false,
+                'aBoolean' => false,
                 'flatArray' => array(
-                    'a','b','c','d'
+                    'a', 'b', 'c', 'd'
                 ),
-                'aDouble'   => 5.5
+                'aDouble' => 5.5
             )
         ),
         'simple' => array(

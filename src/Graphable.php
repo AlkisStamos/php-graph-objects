@@ -25,18 +25,18 @@ interface Graphable
     public static function create();
 
     /**
-     * Must return the main metadata of the entity in order to be mapped using a standard format best shown at examples.
-     *
-     * @return Entity The entity metadata to be used on mapping
-     */
-    public function graph();
-
-    /**
      * Base method used to map the array of data to the graphable object. The main purpose of the method is to create
      * an empty object that implements the graphable and to map the data to its properties using the graph metadata.
      *
      * @param array $data The assoc array to be mapped on the graph object
      * @return $this The fully mapped object
      */
-    public static function map(Array $data);
+    public static function map(array $data);
+
+    /**
+     * Must return the main metadata of the entity in order to be mapped using a standard format best shown at examples.
+     *
+     * @return Entity The entity metadata to be used on mapping
+     */
+    public function graph();
 } 

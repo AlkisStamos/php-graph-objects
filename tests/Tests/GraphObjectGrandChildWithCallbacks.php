@@ -1,6 +1,6 @@
 <?php
 
-namespace Nuad\Graph\Test;
+namespace Nuad\Graph\Test\Tests;
 
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphAdapter;

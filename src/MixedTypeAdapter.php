@@ -25,6 +25,6 @@ class MixedTypeAdapter implements TypeAdapter
      */
     public function map($from, Type $pattern, $name, $scenario)
     {
-        return new Value(true,$from);
+        return new Value(true, $from);
     }
 }

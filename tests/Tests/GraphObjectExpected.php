@@ -5,12 +5,12 @@
  * Time: 9:28 PM
  */
 
-namespace Nuad\Graph\Test;
+namespace Nuad\Graph\Test\Tests;
 
 use Nuad\Graph\GraphAdapter;
 use Nuad\Graph\Type;
 
-class GraphObjectExpected extends GraphSimple
+class GraphObjectExpected extends \Nuad\Graph\Test\Tests\GraphSimple
 {
     use GraphAdapter;
 

@@ -23,7 +23,7 @@ class Type
      * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
-    public static $_IMPORTANT  = 'I';
+    public static $_IMPORTANT = 'I';
     /**
      * Formats the property as required. Required properties must exist in the payload the graph engine will map them
      * even if their value is invalid.
@@ -31,7 +31,7 @@ class Type
      * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
-    public static $_REQUIRED   = 'R';
+    public static $_REQUIRED = 'R';
     /**
      * Formats the property as optional. Optional properties are not required in the payload. The property importance
      * defaults to optional meaning that the engine will assign an empty value to the property or the default value
@@ -40,7 +40,7 @@ class Type
      * @deprecated use the Entity::finalize method to validate properties
      * @var string
      */
-    public static $_OPTIONAL   = 'O';
+    public static $_OPTIONAL = 'O';
     /**
      * The importance of the property that the Type is bound to
      *
@@ -215,13 +215,12 @@ class Type
      * @param TypeAdapter $customAdapter
      * @return Type
      */
-    public static function Mixed(TypeAdapter $customAdapter=null)
+    public static function Mixed(TypeAdapter $customAdapter = null)
     {
-        if($customAdapter === null)
-        {
-            return new self(null,new MixedTypeAdapter());
+        if ($customAdapter === null) {
+            return new self(null, new MixedTypeAdapter());
         }
-        $type = new Type(null,$customAdapter);
+        $type = new Type(null, $customAdapter);
         $type->isCustom = true;
         return $type;
     }
@@ -230,8 +229,8 @@ class Type
      * Sets the property that is defined by the type as important. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
-     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
+     * @deprecated use the Entity::finalize method to validate properties
      */
     public function important()
     {
@@ -243,8 +242,8 @@ class Type
      * Sets the property that is defined by the type as optional. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
-     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
+     * @deprecated use the Entity::finalize method to validate properties
      */
     public function optional()
     {
@@ -256,8 +255,8 @@ class Type
      * Sets the property that is defined by the type as required. The method has been moved from the property class in
      * order to provide a more easy and clear way to define an entity.
      *
-     * @deprecated use the Entity::finalize method to validate properties
      * @return $this
+     * @deprecated use the Entity::finalize method to validate properties
      */
     public function required()
     {
@@ -288,12 +287,10 @@ class Type
      * @param array $expected
      * @return $this
      */
-    public function expected(Array $expected)
+    public function expected(array $expected)
     {
-        foreach($expected as $var)
-        {
-            if(is_string($var))
-            {
+        foreach ($expected as $var) {
+            if (is_string($var)) {
                 $this->expected[$var] = false;
             }
         }
@@ -336,112 +333,86 @@ class Type
      * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return Value | null
      */
-    public function match($name, Array $payload, $scenario)
+    public function match($name, array $payload, $scenario)
     {
-        if($this->isCustom)
-        {
-            if($this->applyIndexes !== null)
-            {
+        if ($this->isCustom) {
+            if ($this->applyIndexes !== null) {
                 $custom = array();
-                foreach($this->applyIndexes as $key=>$value)
-                {
-                    if($value instanceof Type)
-                    {
-                        $customValue = $value->match($key,$payload,$scenario);
+                foreach ($this->applyIndexes as $key => $value) {
+                    if ($value instanceof Type) {
+                        $customValue = $value->match($key, $payload, $scenario);
                         $custom[is_int($key) ? $value : $key] = $customValue instanceof Value ?
                             $customValue->value :
                             $customValue;
                         continue;
                     }
-                    $custom[is_int($key) ? $value : $key] = (strpos($value,'.') !== false) ?
-                        $this->matchNested(explode('.',$value),$payload,$scenario,$found,true) :
-                        self::matchRawValue($value,$payload,$found);
+                    $custom[is_int($key) ? $value : $key] = (strpos($value, '.') !== false) ?
+                        $this->matchNested(explode('.', $value), $payload, $scenario, $found, true) :
+                        self::matchRawValue($value, $payload, $found);
                 }
-                return new Value(true, $this->adapter->map($custom,$this,$name,$scenario));
+                return new Value(true, $this->adapter->map($custom, $this, $name, $scenario));
             }
-            return new Value(true, $this->adapter->map($payload,$this,$name,$scenario));
+            return new Value(true, $this->adapter->map($payload, $this, $name, $scenario));
         }
-        foreach($this->bindings as $binding)
-        {
-            $matched = (strpos($binding,'.') !== false) ?
-                $this->matchNested(explode('.',$binding),$payload,$scenario,$found) :
-                $this->matchValue($binding,$payload,$scenario,$found);
-            if($found)
-            {
+        foreach ($this->bindings as $binding) {
+            $matched = (strpos($binding, '.') !== false) ?
+                $this->matchNested(explode('.', $binding), $payload, $scenario, $found) :
+                $this->matchValue($binding, $payload, $scenario, $found);
+            if ($found) {
                 return $matched;
             }
         }
-        $matched = $this->matchValue($name,$payload,$scenario,$found);
-        if(!$found)
-        {
-            foreach($this->expected as $expected=>$checked)
-            {
-                if(!$checked)
-                {
-                    if(strpos($expected,'.') !== false)
-                    {
-                        $matched = $this->matchNested(explode('.',$expected),$payload,$scenario,$found);
-                        if($found)
-                        {
+        $matched = $this->matchValue($name, $payload, $scenario, $found);
+        if (!$found) {
+            foreach ($this->expected as $expected => $checked) {
+                if (!$checked) {
+                    if (strpos($expected, '.') !== false) {
+                        $matched = $this->matchNested(explode('.', $expected), $payload, $scenario, $found);
+                        if ($found) {
                             break;
                         }
-                    }
-                    else
-                    {
-                        $matched = $this->matchValue($expected,$payload,$scenario,$found);
-                        if($found)
-                        {
+                    } else {
+                        $matched = $this->matchValue($expected, $payload, $scenario, $found);
+                        if ($found) {
                             break;
                         }
                     }
                 }
             }
-            if(!$found && $this->default !== null)
-            {
-                $matched = new Value(true,$this->default);
+            if (!$found && $this->default !== null) {
+                $matched = new Value(true, $this->default);
             }
         }
         return $matched;
     }
 
     /**
-     * Method that maps return the value to be applied to the current property. The name passed may be the property
-     * name or the expected/bindTo name of the property. If exists runs the handler callback of the property.
+     * Method that matches a nested value (using the '.' character in the expected or bind to values). If the value is
+     * matched the method will set the matched reference to true.
      *
-     * @param $name
-     * @param $val
-     * @param $scenario
-     * @return mixed|Value
-     */
-    private function map($name, $val, $scenario)
-    {
-        $callback = null;
-        if($this->mapCallback !== null)
-        {
-            $callback = self::runMapCallback($this->mapCallback,$val,$name,$scenario);
-        }
-        return $callback === null ? $this->adapter->map($val, $this, $name, $scenario) : new Value(true,$callback);
-    }
-
-    /**
-     * Matches the value of the payload to the name provided. If found the method will set the matched reference to true
-     * in other case the method will return null and the matched set to false.
-     *
-     * @param $name
-     * @param $payload
+     * @param array $profile
+     * @param array $payload
      * @param $scenario
      * @param $matched
+     * @param $raw
      * @return mixed|Value|null
      */
-    private function matchValue($name, $payload, $scenario, &$matched)
+    private function matchNested(array $profile, array $payload, $scenario, &$matched, $raw = false)
     {
         $matchedValue = null;
         $matched = false;
-        $value = self::matchRawValue($name,$payload,$found);
-        if($found)
-        {
-            $matched = true;
-            $matchedValue = $this->map($name,$value,$scenario);
+        $nested = $payload;
+        foreach ($profile as $profileIndex => $profileItem) {
+            $value = self::matchRawValue($profileItem, $nested, $found);
+            if ($found === false) {
+                $matched = false;
+                return $matchedValue;
+            } else if (!isset($profile[$profileIndex + 1])) {
+                $matched = true;
+                return $raw ? $value : $this->map($profileItem, $value, $scenario);
+            } else {
+                $nested = $value;
+            }
         }
         return $matchedValue;
     }
@@ -458,8 +429,7 @@ class Type
     private static function matchRawValue($name, array $payload, &$found)
     {
         $found = false;
-        if(isset($payload[$name]))
-        {
+        if (isset($payload[$name])) {
             $found = true;
             return $payload[$name];
         }
@@ -467,43 +437,58 @@ class Type
     }
 
     /**
-     * Method that matches a nested value (using the '.' character in the expected or bind to values). If the value is
-     * matched the method will set the matched reference to true.
+     * Method that maps return the value to be applied to the current property. The name passed may be the property
+     * name or the expected/bindTo name of the property. If exists runs the handler callback of the property.
      *
-     * @param array $profile
-     * @param array $payload
+     * @param $name
+     * @param $val
+     * @param $scenario
+     * @return mixed|Value
+     */
+    private function map($name, $val, $scenario)
+    {
+        $callback = null;
+        if ($this->mapCallback !== null) {
+            $callback = self::runMapCallback($this->mapCallback, $val, $name, $scenario);
+        }
+        return $callback === null ? $this->adapter->map($val, $this, $name, $scenario) : new Value(true, $callback);
+    }
+
+    /**
+     * Helper method to run a callback that is a property (on $this)
+     *
+     * @param callable $callback
+     * @param mixed $data
+     * @param string $name
+     * @param string $scenario
+     * @return mixed
+     */
+    private static function runMapCallback(callable $callback, $data, $name, $scenario)
+    {
+        return $callback($data, $name, $scenario);
+    }
+
+    /**
+     * Matches the value of the payload to the name provided. If found the method will set the matched reference to true
+     * in other case the method will return null and the matched set to false.
+     *
+     * @param $name
+     * @param $payload
      * @param $scenario
      * @param $matched
-     * @param $raw
      * @return mixed|Value|null
      */
-    private function matchNested(array $profile, array $payload, $scenario, &$matched, $raw=false)
+    private function matchValue($name, $payload, $scenario, &$matched)
     {
         $matchedValue = null;
         $matched = false;
-        $nested = $payload;
-        foreach($profile as $profileIndex=>$profileItem)
-        {
-            $value = self::matchRawValue($profileItem,$nested,$found);
-            if($found === false)
-            {
-                $matched = false;
-                return $matchedValue;
-            }
-            else if(!isset($profile[$profileIndex + 1]))
-            {
-                $matched = true;
-                return $raw ? $value : $this->map($profileItem,$value,$scenario);
-            }
-            else
-            {
-                $nested = $value;
-            }
+        $value = self::matchRawValue($name, $payload, $found);
+        if ($found) {
+            $matched = true;
+            $matchedValue = $this->map($name, $value, $scenario);
         }
         return $matchedValue;
     }
-
-
 
     /**
      * Attaches a callback to the property. The callback will be called when the match property has found a valid name
@@ -518,19 +503,5 @@ class Type
     {
         $this->mapCallback = $callable;
         return $this;
-    }
-
-    /**
-     * Helper method to run a callback that is a property (on $this)
-     *
-     * @param callable $callback
-     * @param mixed $data
-     * @param string $name
-     * @param string $scenario
-     * @return mixed
-     */
-    private static function runMapCallback(callable $callback, $data, $name, $scenario)
-    {
-        return $callback($data,$name,$scenario);
     }
 }

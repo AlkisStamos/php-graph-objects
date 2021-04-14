@@ -3,9 +3,7 @@
          colors="true"
          beStrictAboutChangesToGlobalState="true"
          beStrictAboutOutputDuringTests="true"
-         beStrictAboutTestSize="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         checkForUnintentionallyCoveredCode="true">
+         beStrictAboutTestsThatDoNotTestAnything="true">
     <testsuites>
         <testsuite name="PHP Graph Objects">
             <directory>./</directory>

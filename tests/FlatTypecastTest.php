@@ -7,9 +7,10 @@
 
 namespace Nuad\Graph\Test;
 
+use Nuad\Graph\Test\Tests\GraphObjectBase;
 use PHPUnit\Framework\TestCase;
 
-class TestTypecast extends TestCase
+class FlatTypecastTest extends TestCase
 {
     public function testTypecastNormal()
     {
@@ -20,7 +21,7 @@ class TestTypecast extends TestCase
         $this->assertSame(true, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('property'=>1, 'otherProperty'=>2), $obj->flatArray));
         $this->assertSame(2.0, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testTypecastDiff()
@@ -32,7 +33,7 @@ class TestTypecast extends TestCase
         $this->assertSame(true, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array(), $obj->flatArray));
         $this->assertSame(-0.6, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testTypecastFail()
@@ -44,6 +45,6 @@ class TestTypecast extends TestCase
         $this->assertSame(null, $obj->aBoolean);
         $this->assertSame(null, $obj->flatArray);
         $this->assertSame(null, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 }

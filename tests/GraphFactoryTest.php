@@ -9,9 +9,10 @@ namespace Nuad\Graph\Test;
 use Nuad\Graph\Entity;
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphFactory;
+use Nuad\Graph\Test\Tests\GraphObjectBase;
 use PHPUnit\Framework\TestCase;
 
-class RuntimeCacheTest extends TestCase
+class GraphFactoryTest extends TestCase
 {
     public function testSameObjectMap()
     {
@@ -22,7 +23,7 @@ class RuntimeCacheTest extends TestCase
         $this->assertSame(false, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
 
         unset($baseData['anInteger']);
         unset($baseData['aBoolean']);
@@ -35,7 +36,7 @@ class RuntimeCacheTest extends TestCase
         $this->assertNull($obj2->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj2->flatArray));
         $this->assertSame(5.5, $obj2->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj2);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj2);
 
         $this->assertNotSame($obj,$obj2);
     }

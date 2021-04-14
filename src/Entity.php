@@ -56,7 +56,7 @@ class Entity
      * @param string[] $names
      * @return Entity
      */
-    public static function graph(Array $names)
+    public static function graph(array $names)
     {
         return new self($names);
     }
@@ -68,12 +68,10 @@ class Entity
      * @param Type[] $properties
      * @return $this
      */
-    public function properties(Array $properties)
+    public function properties(array $properties)
     {
-        foreach ($properties as $key => $property)
-        {
-            if ($property instanceof Type)
-            {
+        foreach ($properties as $key => $property) {
+            if ($property instanceof Type) {
                 $this->properties[$key] = $property;
             }
         }
@@ -88,7 +86,7 @@ class Entity
      * @param string[] $names
      * @return Entity
      */
-    public function extend(Array $names)
+    public function extend(array $names)
     {
         $this->names = $names;
         return $this;
@@ -117,9 +115,8 @@ class Entity
      */
     public function complete($instance, $scenario, $data)
     {
-        if($this->finalizeCallback !== null)
-        {
-            self::runFinalizeCallback($this->finalizeCallback,$instance,$scenario,$data);
+        if ($this->finalizeCallback !== null) {
+            self::runFinalizeCallback($this->finalizeCallback, $instance, $scenario, $data);
         }
     }
 

@@ -3,6 +3,11 @@
 namespace Nuad\Graph\Test;
 
 
+use Nuad\Graph\Test\Tests\GraphObjectBase;
+use Nuad\Graph\Test\Tests\GraphObjectChild;
+use Nuad\Graph\Test\Tests\GraphObjectList;
+use Nuad\Graph\Test\Tests\GraphObjectNest;
+use Nuad\Graph\Test\Tests\GraphObjectStep;
 use PHPUnit\Framework\TestCase;
 
 class GraphAdapterStepTest extends TestCase
@@ -11,7 +16,7 @@ class GraphAdapterStepTest extends TestCase
     {
         $obj = GraphObjectStep::createEmpty();
 
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
 
         $nestedData = Util::loadData('nested');
         $obj->mapProperty($nestedData,'nested');
@@ -44,14 +49,14 @@ class GraphAdapterStepTest extends TestCase
         $this->assertNested($obj->nested);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
     }
 
     public function testMapObjectStepByStep_withCreated()
     {
         $extraData = Util::loadData('step_properties');
         $obj = GraphObjectStep::map($extraData);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
         $this->assertNull($obj->child);
@@ -60,7 +65,7 @@ class GraphAdapterStepTest extends TestCase
 
         $nestedData = Util::loadData('nested');
         $obj->mapEmpty(array('nested'=>$nestedData));
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
         $this->assertNested($obj->nested);
@@ -69,7 +74,7 @@ class GraphAdapterStepTest extends TestCase
 
         $listData = Util::loadData('list');
         $obj->mapEmpty(array('list'=>$listData));
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
         $this->assertNested($obj->nested);
@@ -78,7 +83,7 @@ class GraphAdapterStepTest extends TestCase
 
         $childData = Util::loadData('child');
         $obj->mapEmpty(array('child'=>$childData));
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
         $this->assertNested($obj->nested);
@@ -92,7 +97,7 @@ class GraphAdapterStepTest extends TestCase
         $obj = $this->testMapObjectStepByStep_withCreated();
         $diffChildData = Util::loadData('child_parent_diff');
         $obj->mapProperty($diffChildData,'child');
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectStep',$obj);
+        $this->assertInstanceOf(GraphObjectStep::class,$obj);
         $this->assertSame('aproperty',$obj->property);
         $this->assertEquals(1,$obj->anotherProperty);
         $this->assertNested($obj->nested);
@@ -110,7 +115,7 @@ class GraphAdapterStepTest extends TestCase
         $this->assertSame(10.5, $obj->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->child->childValueStr);
         $this->assertSame(false,$obj->child->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj);
+        $this->assertInstanceOf(GraphObjectNest::class,$obj);
     }
 
     private function assertChild($obj)
@@ -122,7 +127,7 @@ class GraphAdapterStepTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     private function assertDiffChild($obj)
@@ -134,7 +139,7 @@ class GraphAdapterStepTest extends TestCase
         $this->assertSame(10.5, $obj->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->childValueStr);
         $this->assertSame(false,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     private function assertList($obj)
@@ -150,8 +155,8 @@ class GraphAdapterStepTest extends TestCase
         $this->assertSame(10.5, $obj->nest->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->nest->child->childValueStr);
         $this->assertSame(false,$obj->nest->child->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj->nest);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectList',$obj);
+        $this->assertInstanceOf(GraphObjectNest::class,$obj->nest);
+        $this->assertInstanceOf(GraphObjectList::class,$obj);
         foreach($obj->baseList as $index=>$item)
         {
             $this->assertListIteration($index,$item);
@@ -165,6 +170,6 @@ class GraphAdapterStepTest extends TestCase
         $this->assertSame(($index+0.5),$obj->aDouble);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 }

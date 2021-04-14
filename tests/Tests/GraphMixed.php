@@ -5,7 +5,7 @@
  * Time: 3:48 PM
  */
 
-namespace Nuad\Graph\Test;
+namespace Nuad\Graph\Test\Tests;
 
 use Nuad\Graph\Entity;
 use Nuad\Graph\Graphable;

@@ -1,3 +1,4 @@
 /.idea/
 PHP Graph Objects.iml
 /vendor/
+/tests/.phpunit.result.cache

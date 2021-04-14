@@ -5,7 +5,7 @@
  * Time: 9:32 PM
  */
 
-namespace Nuad\Graph\Test;
+namespace Nuad\Graph\Test\Tests;
 
 use Nuad\Graph\Entity;
 use Nuad\Graph\Graphable;
@@ -33,15 +33,15 @@ class GraphSimple implements Graphable
         return Entity::graph([
             'GraphSimple'
         ])->properties([
-            'simpleInteger'     => Type::Integer()
-            ->bindTo(['simple-integer','simple_integer'])
-            ->expected(['simpleInt','simple-int']),
-            'simpleString'      => Type::String()
-            ->bindTo(['simple-string','simple_string'])
-            ->expected(['simpleString','simple-str']),
-            'simpleMixed'       => Type::Mixed()
-            ->bindTo(['simple-mixed'])
-            ->expected(['mixed-simple'])
+            'simpleInteger' => Type::Integer()
+                ->bindTo(['simple-integer', 'simple_integer'])
+                ->expected(['simpleInt', 'simple-int']),
+            'simpleString' => Type::String()
+                ->bindTo(['simple-string', 'simple_string'])
+                ->expected(['simpleString', 'simple-str']),
+            'simpleMixed' => Type::Mixed()
+                ->bindTo(['simple-mixed'])
+                ->expected(['mixed-simple'])
         ]);
     }
 }

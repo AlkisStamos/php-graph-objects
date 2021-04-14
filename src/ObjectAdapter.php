@@ -12,6 +12,6 @@ class ObjectAdapter implements TypeAdapter
 {
     public function map($from, Type $pattern, $name, $scenario)
     {
-        return new Value(true,$pattern->value->map($from));
+        return new Value(true, $pattern->value->map($from));
     }
 } 

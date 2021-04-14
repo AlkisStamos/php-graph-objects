@@ -1,10 +1,11 @@
 <?php
 
-namespace Nuad\Graph\Test;
+namespace Nuad\Graph\Test\Tests;
 
 use Nuad\Graph\Entity;
 use Nuad\Graph\Graphable;
 use Nuad\Graph\GraphAdapter;
+use Nuad\Graph\Test\GraphObjectNest;
 use Nuad\Graph\Type;
 
 class GraphObjectList implements Graphable
@@ -37,7 +38,7 @@ class GraphObjectList implements Graphable
         ->properties(
             [
                 'assoc'     => Type::FlatArray(),
-                'nest'      => Type::Object(GraphObjectNest::create()),
+                'nest'      => Type::Object(\Nuad\Graph\Test\Tests\GraphObjectNest::create()),
                 'baseList'  => Type::Collection(GraphObjectBase::create())
             ]
         );

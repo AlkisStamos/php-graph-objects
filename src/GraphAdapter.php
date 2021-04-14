@@ -18,19 +18,6 @@ namespace Nuad\Graph;
 trait GraphAdapter
 {
     /**
-     * Implements the create method of the graphable interface to keep the main entities from implementing the same
-     * create method over and over again. NOTICE: the method will use reflection to generate an instance, in order to
-     * keep things lighter the graph objects should implement this method themselves.
-     *
-     * @param bool|false $wReflection If passed as false the mapping method will not use the constructor
-     * @return $this|Graphable The fully mapped graph object
-     */
-    public static function create($wReflection=false)
-    {
-        return GraphFactory::create(__CLASS__,$wReflection);
-    }
-
-    /**
      * Injects the data to the object without having to invoke the create method outside of the trait. The method is
      * basically a shortcut to create instance in one command. If the create method is not overridden the method will
      * try to invoke the entity's constructor with the data.
@@ -40,61 +27,95 @@ trait GraphAdapter
      * @return $this The fully mapped object
      * @throws GraphTypeException
      */
-    public static function inject(Array $data, $scenario=null)
+    public static function inject(array $data, $scenario = null)
     {
         $obj = self::create(true);
         $reflect = null;
-        if($obj instanceof \ReflectionClass)
-        {
+        if ($obj instanceof \ReflectionClass) {
             $reflect = $obj;
             $obj = $reflect->newInstanceWithoutConstructor();
-        }
-        else if($obj instanceof Graphable)
-        {
+        } else if ($obj instanceof Graphable) {
             $reflect = new \ReflectionClass(__CLASS__);
         }
-        if($obj instanceof Graphable && $reflect instanceof \ReflectionClass)
-        {
+        if ($obj instanceof Graphable && $reflect instanceof \ReflectionClass) {
             $graph = GraphFactory::getGraphMetadata($obj);
             $properties = array();
-            foreach($graph->properties as $name=>$property)
-            {
-                $valInject = self::mapInternalProperty($data,$name,$property,$scenario);
-                if($valInject !== null)
-                {
+            foreach ($graph->properties as $name => $property) {
+                $valInject = self::mapInternalProperty($data, $name, $property, $scenario);
+                if ($valInject !== null) {
                     $properties[$name] = $valInject;
                 }
             }
-            if(null !== ($constructor = $reflect->getConstructor()))
-            {
+            if (null !== ($constructor = $reflect->getConstructor())) {
                 $params = $constructor->getParameters();
                 $inject = array();
-                foreach($params as $index=>$param)
-                {
-                    if(array_key_exists($param->name,$properties))
-                    {
+                foreach ($params as $index => $param) {
+                    if (array_key_exists($param->name, $properties)) {
                         $inject[$index] = $properties[$param->name];
                         continue;
                     }
                     $val = null;
-                    if($param->isDefaultValueAvailable())
-                    {
+                    if ($param->isDefaultValueAvailable()) {
                         $val = $param->getDefaultValue();
                     }
                     $inject[$index] = $val;
                 }
                 $obj = $reflect->newInstanceArgs($inject);
-            }
-            else
-            {
-                foreach($properties as $name=>$value)
-                {
+            } else {
+                foreach ($properties as $name => $value) {
                     $obj->{$name} = $value;
                 }
             }
             $graph->complete($obj, $scenario, $data);
         }
         return $obj;
+    }
+
+    /**
+     * Implements the create method of the graphable interface to keep the main entities from implementing the same
+     * create method over and over again. NOTICE: the method will use reflection to generate an instance, in order to
+     * keep things lighter the graph objects should implement this method themselves.
+     *
+     * @param bool|false $wReflection If passed as false the mapping method will not use the constructor
+     * @return $this|Graphable The fully mapped graph object
+     */
+    public static function create($wReflection = false)
+    {
+        return GraphFactory::create(__CLASS__, $wReflection);
+    }
+
+    /**
+     * Internal method used to map properties to its values the method will take each property and though the graph
+     * metadata will try to map the passed data array to the entity's property
+     *
+     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
+     * scenario value along with the data and the found name will be passed to the callback.
+     *
+     * @param array $data The data to be mapped to the property
+     * @param string $name The name of the property
+     * @param Type $property The graph type of the property
+     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
+     * @return null|mixed The method will allow null on optional properties
+     * @throws GraphTypeException
+     */
+    private static function mapInternalProperty(array $data, $name, Type $property, $scenario = null)
+    {
+        $val = $property->match($name, $data, $scenario);
+        $injectable = null;
+        if ($val === null) {
+            if ($property->importance === Type::$_IMPORTANT) {
+                throw new GraphTypeException('Important property: ' . $name . ' found no match in dataset');
+            }
+        } else if ($val === false) {
+            if ($property->importance === Type::$_IMPORTANT || $property->importance === Type::$_REQUIRED) {
+                throw new GraphTypeException('Required or important property: ' . $name . ' found no match in dataset');
+            }
+        } else if ($val instanceof Value) {
+            $injectable = $val->value;
+        } else {
+            throw new GraphTypeException('Unknown value:' . $val . ' for property: ' . $name . ' on object: ' . __CLASS__);
+        }
+        return $injectable;
     }
 
     /**
@@ -111,14 +132,12 @@ trait GraphAdapter
      * @return $this|Graphable The fully mapped object
      * @throws GraphTypeException
      */
-    public static function injectWithInstance(Graphable $obj, Array $data, $scenario=null)
+    public static function injectWithInstance(Graphable $obj, array $data, $scenario = null)
     {
         $graph = GraphFactory::getGraphMetadata($obj);
-        foreach($graph->properties as $name=>$property)
-        {
-            $valInject = self::mapInternalProperty($data,$name,$property,$scenario);
-            if($valInject !== null)
-            {
+        foreach ($graph->properties as $name => $property) {
+            $valInject = self::mapInternalProperty($data, $name, $property, $scenario);
+            if ($valInject !== null) {
                 $obj->{$name} = $valInject;
             }
         }
@@ -138,17 +157,31 @@ trait GraphAdapter
      * @return $this The fully mapped graph object
      * @throws GraphTypeException
      */
-    public static function map(Array $data, $scenario=null)
+    public static function map(array $data, $scenario = null)
     {
         $obj = self::create();
-        if($obj instanceof Graphable)
-        {
+        if ($obj instanceof Graphable) {
             $graph = GraphFactory::getGraphMetadata($obj);
-            foreach($graph->properties as $name=>$property)
-            {
-                $obj->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
+            foreach ($graph->properties as $name => $property) {
+                $obj->{$name} = self::mapInternalProperty($data, $name, $property, $scenario);
             }
             $graph->complete($obj, $scenario, $data);
+        }
+        return $obj;
+    }
+
+    /**
+     * Will create an empty object for mapping. Under consideration to only use this method when trying to map empty so
+     * the mapEmpty method will only check for null values to bind
+     *
+     * @return $this
+     */
+    public static function createEmpty()
+    {
+        $obj = self::create();
+        $vars = get_object_vars($obj);
+        foreach ($vars as $prop => $var) {
+            $obj->{$prop} = null;
         }
         return $obj;
     }
@@ -165,23 +198,17 @@ trait GraphAdapter
      * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
      * @return $this The fully mapped graph object
      */
-    public function mapEmpty(Array $data, $scenario=null)
+    public function mapEmpty(array $data, $scenario = null)
     {
-        if($this instanceof Graphable)
-        {
+        if ($this instanceof Graphable) {
             $graph = GraphFactory::getGraphMetadata($this);
-            foreach($graph->properties as $name=>$property)
-            {
-                try
-                {
-                    if($this->{$name} === null)
-                    {
-                        $this->{$name} = self::mapInternalProperty($data,$name,$property,$scenario);
+            foreach ($graph->properties as $name => $property) {
+                try {
+                    if ($this->{$name} === null) {
+                        $this->{$name} = self::mapInternalProperty($data, $name, $property, $scenario);
                         continue;
                     }
-                }
-                catch(\Exception $e)
-                {
+                } catch (\Exception $e) {
                     continue;
                 }
             }
@@ -204,77 +231,15 @@ trait GraphAdapter
      * @return $this The fully mapped graph object
      * @throws GraphTypeException
      */
-    public function mapProperty(Array $data,$propertyName,$scenario=null)
+    public function mapProperty(array $data, $propertyName, $scenario = null)
     {
-        if($this instanceof Graphable)
-        {
+        if ($this instanceof Graphable) {
             $entity = GraphFactory::getGraphMetadata($this);
-            if(!array_key_exists($propertyName,$entity->properties))
-            {
-                throw new GraphTypeException('Property: '.$propertyName.' was not found on graph');
+            if (!array_key_exists($propertyName, $entity->properties)) {
+                throw new GraphTypeException('Property: ' . $propertyName . ' was not found on graph');
             }
-            $this->{$propertyName} = self::mapInternalProperty(array($propertyName => $data),$propertyName,$entity->properties[$propertyName],$scenario);
+            $this->{$propertyName} = self::mapInternalProperty(array($propertyName => $data), $propertyName, $entity->properties[$propertyName], $scenario);
         }
         return $this;
-    }
-
-    /**
-     * Internal method used to map properties to its values the method will take each property and though the graph
-     * metadata will try to map the passed data array to the entity's property
-     *
-     * The scenario param is passed to assist for different mapping cases when using callbacks on properties. The
-     * scenario value along with the data and the found name will be passed to the callback.
-     *
-     * @param array $data The data to be mapped to the property
-     * @param string $name The name of the property
-     * @param Type $property The graph type of the property
-     * @param string $scenario String to passed through Type's callbacks to assist on the mapping case
-     * @return null|mixed The method will allow null on optional properties
-     * @throws GraphTypeException
-     */
-    private static function mapInternalProperty(Array $data, $name, Type $property, $scenario=null)
-    {
-        $val = $property->match($name,$data,$scenario);
-        $injectable = null;
-        if($val === null)
-        {
-            if($property->importance === Type::$_IMPORTANT)
-            {
-                throw new GraphTypeException('Important property: '.$name.' found no match in dataset');
-            }
-        }
-        else if($val === false)
-        {
-            if($property->importance === Type::$_IMPORTANT || $property->importance === Type::$_REQUIRED)
-            {
-                throw new GraphTypeException('Required or important property: '.$name.' found no match in dataset');
-            }
-        }
-        else if($val instanceof Value)
-        {
-            $injectable = $val->value;
-        }
-        else
-        {
-            throw new GraphTypeException('Unknown value:'.$val.' for property: '.$name.' on object: '.__CLASS__);
-        }
-        return $injectable;
-    }
-
-    /**
-     * Will create an empty object for mapping. Under consideration to only use this method when trying to map empty so
-     * the mapEmpty method will only check for null values to bind
-     *
-     * @return $this
-     */
-    public static function createEmpty()
-    {
-        $obj = self::create();
-        $vars = get_object_vars($obj);
-        foreach($vars as $prop=>$var)
-        {
-            $obj->{$prop} = null;
-        }
-        return $obj;
     }
 }

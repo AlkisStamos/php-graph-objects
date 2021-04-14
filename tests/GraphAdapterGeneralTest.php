@@ -3,6 +3,10 @@
 namespace Nuad\Graph\Test;
 
 
+use Nuad\Graph\Test\Tests\GraphObjectBase;
+use Nuad\Graph\Test\Tests\GraphObjectChild;
+use Nuad\Graph\Test\Tests\GraphObjectList;
+use Nuad\Graph\Test\Tests\GraphObjectNest;
 use PHPUnit\Framework\TestCase;
 
 class GraphAdapterGeneralTest extends TestCase
@@ -16,7 +20,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(false, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testInjectObjectBase()
@@ -28,7 +32,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(false, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testInjectObjectBase_withTypecast()
@@ -40,7 +44,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(false, $obj->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(5.5, $obj->aDouble);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 
     public function testMapInheritance()
@@ -54,7 +58,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     public function testInjectInheritance()
@@ -68,7 +72,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     public function testMapEmpty()
@@ -84,7 +88,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->childValueStr);
         $this->assertSame(false,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     public function testListMapping()
@@ -102,8 +106,8 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(10.5, $obj->nest->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->nest->child->childValueStr);
         $this->assertSame(false,$obj->nest->child->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj->nest);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectList',$obj);
+        $this->assertInstanceOf(GraphObjectNest::class,$obj->nest);
+        $this->assertInstanceOf(GraphObjectList::class,$obj);
         foreach($obj->baseList as $index=>$item)
         {
             $this->assertListIteration($index,$item);
@@ -122,7 +126,7 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(20.0, $obj->aDouble);
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 
     private function assertListIteration($index, GraphObjectBase $obj)
@@ -132,6 +136,6 @@ class GraphAdapterGeneralTest extends TestCase
         $this->assertSame(($index+0.5),$obj->aDouble);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->flatArray));
         $this->assertSame(false, $obj->aBoolean);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj);
     }
 }

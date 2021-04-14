@@ -13,4 +13,6 @@ namespace Nuad\Graph;
  * Class GraphTypeException
  * @package Nuad\Graph
  */
-class GraphTypeException extends \Exception{}
+class GraphTypeException extends \Exception
+{
+}

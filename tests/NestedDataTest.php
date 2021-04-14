@@ -7,6 +7,10 @@
 
 namespace Nuad\Graph\Test;
 
+use Nuad\Graph\Test\Tests\GraphObjectBase;
+use Nuad\Graph\Test\Tests\GraphObjectChild;
+use Nuad\Graph\Test\Tests\GraphObjectNest;
+use Nuad\Graph\Test\Tests\GraphObjectNestedData;
 use PHPUnit\Framework\TestCase;
 
 class NestedDataTest extends TestCase
@@ -20,14 +24,14 @@ class NestedDataTest extends TestCase
         $this->assertTrue(Util::arrays_are_similar(array('12', '13', '14'), $obj->array));
         $this->assertSame(356,$obj->anotherInteger);
 
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectBase',$obj->base);
+        $this->assertInstanceOf(GraphObjectBase::class,$obj->base);
         $this->assertSame('astringvalue', $obj->base->aString);
         $this->assertSame(5, $obj->base->anInteger);
         $this->assertSame(false, $obj->base->aBoolean);
         $this->assertTrue(Util::arrays_are_similar(array('a', 'b', 'c', 'd'), $obj->base->flatArray));
         $this->assertSame(5.5, $obj->base->aDouble);
 
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj->child);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj->child);
         $this->assertSame('astringvalue', $obj->child->aString);
         $this->assertSame(5, $obj->child->anInteger);
         $this->assertSame(false, $obj->child->aBoolean);
@@ -36,7 +40,7 @@ class NestedDataTest extends TestCase
         $this->assertSame('anotherstringvalue', $obj->child->childValueStr);
         $this->assertSame(true,$obj->child->childValueBool);
 
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNestedData',$obj);
+        $this->assertInstanceOf(GraphObjectNestedData::class,$obj);
     }
 
     public function testNestedMapping()
@@ -51,6 +55,6 @@ class NestedDataTest extends TestCase
         $this->assertSame(10.5, $obj->child->aDouble);
         $this->assertSame('anotherstringvaluewithdiff', $obj->child->childValueStr);
         $this->assertSame(false,$obj->child->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectNest',$obj);
+        $this->assertInstanceOf(GraphObjectNest::class,$obj);
     }
 }

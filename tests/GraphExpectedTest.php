@@ -7,6 +7,9 @@
 
 namespace Nuad\Graph\Test;
 
+use Nuad\Graph\Test\Tests\GraphObjectChild;
+use Nuad\Graph\Test\Tests\GraphObjectExpected;
+use Nuad\Graph\Test\Tests\GraphSimple;
 use PHPUnit\Framework\TestCase;
 
 class GraphExpectedTest extends TestCase
@@ -23,11 +26,11 @@ class GraphExpectedTest extends TestCase
         {
             $this->assertSame(22,$simpleObj->simpleInteger);
             $this->assertSame('simple-string-expected-second',$simpleObj->simpleString);
-            $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$simpleObj);
+            $this->assertInstanceOf(GraphSimple::class,$simpleObj);
         }
         $this->assertSame(2,$obj->simple->simpleInteger);
         $this->assertSame('simple-string-expected',$obj->simple->simpleString);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj->simple);
+        $this->assertInstanceOf(GraphSimple::class,$obj->simple);
     }
 
     public function testSecondaryExpectedValues()
@@ -60,11 +63,11 @@ class GraphExpectedTest extends TestCase
         {
             $this->assertSame(11,$simpleObj->simpleInteger);
             $this->assertSame('simple-string-expected-second2',$simpleObj->simpleString);
-            $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj);
+            $this->assertInstanceOf(GraphSimple::class,$obj);
         }
         $this->assertSame(1,$obj->simple->simpleInteger);
         $this->assertSame('simple-string-default',$obj->simple->simpleString);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphSimple',$obj->simple);
+        $this->assertInstanceOf(GraphSimple::class,$obj->simple);
     }
 
     public function testInjectInheritance_withExpectedValues()
@@ -78,6 +81,6 @@ class GraphExpectedTest extends TestCase
         $this->assertSame(5.5, $obj->aDouble);
         $this->assertSame('anotherstringvalue_appendedByTheConstructor', $obj->childValueStr);
         $this->assertSame(true,$obj->childValueBool);
-        $this->assertInstanceOf('Nuad\\Graph\\Test\\GraphObjectChild',$obj);
+        $this->assertInstanceOf(GraphObjectChild::class,$obj);
     }
 }
